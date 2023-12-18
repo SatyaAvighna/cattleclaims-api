@@ -1,0 +1,6 @@
+* * * * * ( curl https://dev-api.apnapolicy.co.in/Cron_Quotes/getquotes)  
+* * * * * ( sleep 10 ; curl https://dev-api.apnapolicy.co.in/Cron_Quotes/getquotes )  
+* * * * * ( sleep 20 ; curl https://dev-api.apnapolicy.co.in/Cron_Quotes/getquotes )  
+* * * * * ( sleep 30 ; curl https://dev-api.apnapolicy.co.in/Cron_Quotes/getquotes )  
+* * * * * ( sleep 40 ; curl https://dev-api.apnapolicy.co.in/Cron_Quotes/getquotes )  
+* * * * * ( sleep 50 ; curl https://dev-api.apnapolicy.co.in/Cron_Quotes/getquotes )  
