@@ -56,7 +56,7 @@
 define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 date_default_timezone_set('Asia/Kolkata');
 //echo $_SERVER['HTTP_ORIGIN'];
-$accessA = array('https://cattleapp-dev.apnapolicy.co.in','https://apnapolicy.co.in','https://www.apnapolicy.co.in');
+$accessA = array('https://cattleapp-dev.apnapolicy.co.in','https://apnapolicy.co.in','https://www.apnapolicy.co.in','http://localhost:3033');
 if (!in_array($_SERVER['HTTP_ORIGIN'],$accessA))
 {
    // redirect, die, etc
