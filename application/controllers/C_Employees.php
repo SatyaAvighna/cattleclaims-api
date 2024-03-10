@@ -65,13 +65,13 @@ class C_Employees extends CI_Controller {
 									$arry['message'] = "Reviewing Manager is mandatory.";
 									if(!empty($data['rvmId']))
 									{
-										$data['aProofPath'] = "";
-										$data['panProofPath'] = "";
-										if(!empty($_FILES)) 
-										{
-											$data['aProofPath'] = $this->uploadfiles($_FILES,"aProof");
-											$data['panProofPath'] = $this->uploadfiles($_FILES,"panProof");
-										}
+										// $data['aProofPath'] = "";
+										// $data['panProofPath'] = "";
+										// if(!empty($_FILES)) 
+										// {
+										// 	$data['aProofPath'] = $this->uploadfiles($_FILES,"aProof");
+										// 	$data['panProofPath'] = $this->uploadfiles($_FILES,"panProof");
+										// }
 										$arry['message'] = "Something went Wrong.";
 										$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
 										$data['sId'] =  $this->encryption->decrypt($data['sId']);
@@ -135,13 +135,13 @@ class C_Employees extends CI_Controller {
 		if(!empty($data['employees_Id']))
 		{
 			$arry['message'] = "Something went wrong.";	
-			$data['aProofPath'] = "";
-			$data['panProofPath'] = "";
-			if(!empty($_FILES)) 
-			{
-				$data['aProofPath'] = $this->uploadfiles($_FILES,"aProof");
-				$data['panProofPath'] = $this->uploadfiles($_FILES,"panProof");
-			}
+			// $data['aProofPath'] = "";
+			// $data['panProofPath'] = "";
+			// if(!empty($_FILES)) 
+			// {
+			// 	$data['aProofPath'] = $this->uploadfiles($_FILES,"aProof");
+			// 	$data['panProofPath'] = $this->uploadfiles($_FILES,"panProof");
+			// }
 			$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
 			$data['sId'] =  $this->encryption->decrypt($data['sId']);
 			$result = $this->employees->updateemployeesById($data);	
@@ -149,6 +149,59 @@ class C_Employees extends CI_Controller {
 			{
 				$arry['status'] = "success";
 				$arry['message'] = "Entry updated successfully.";	
+			}
+		}
+		echo json_encode($arry);
+	}
+	public function updateDocuments()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$data =$this->input->post();
+		$arry['message'] = "Id is mandatory.";
+		if(!empty($data['edId']))
+		{
+			if(!empty($data['employees_Id']))
+			{
+				$arry['message'] = "Something went wrong.";	
+				$data['docPath'] = "";
+				if(!empty($_FILES)) 
+				{
+					$data['docPath'] = $this->uploadfiles($_FILES,"docPath");
+				}
+				$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
+				$data['sId'] =  $this->encryption->decrypt($data['sId']);
+				$result = $this->employees->updateemployeesById($data);	
+				if($result)
+				{
+					$arry['status'] = "success";
+					$arry['message'] = "Entry updated successfully.";	
+				}
+			}
+		}
+		echo json_encode($arry);
+	}
+	public function insertDocuments()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$data =$this->input->post();
+		$arry['message'] = "Id is mandatory.";
+		if(!empty($data['employees_Id']))
+		{
+			$arry['message'] = "Something went wrong.";	
+			$data['docPath'] = "";
+			if(!empty($_FILES)) 
+			{
+				$data['docPath'] = $this->uploadfiles($_FILES,"docPath");
+			}
+			$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
+			$data['sId'] =  $this->encryption->decrypt($data['sId']);
+			$result = $this->employees->insertDocumentsById($data);	
+			if($result)
+			{
+				$arry['status'] = "success";
+				$arry['message'] = "Entry inserted successfully.";	
 			}
 		}
 		echo json_encode($arry);
@@ -169,6 +222,27 @@ class C_Employees extends CI_Controller {
 			{
 				$arry['status'] = "success";
 				$arry['message'] = "Entry deleted successfully.";	
+			}
+		}
+		echo json_encode($arry);
+	}
+	public function deletedocs()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$data =$this->input->post();
+		$arry['message'] = "Id is mandatory.";
+		if(!empty($data['employees_Id']))
+		{
+			if(!empty($data['edId']))
+			{
+				$arry['message'] = "Something went wrong.";	
+				$result = $this->employees->deleteDocumentsById($data);	
+				if($result)
+				{
+					$arry['status'] = "success";
+					$arry['message'] = "Entry deleted successfully.";	
+				}
 			}
 		}
 		echo json_encode($arry);

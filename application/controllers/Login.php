@@ -22,6 +22,7 @@ class Login extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('common');
+		// $this->load->model('users');
 		$this->load->model('employees');
 		$this->load->model('role');
 	}
@@ -31,7 +32,7 @@ class Login extends CI_Controller {
 		$data['status'] = 'error';
 		$loggedin = array();
 		$message = 'Wrong username or password';
-		//print_r($this->input->post());
+		
 		if(!empty($this->input->post('username')) && !empty($this->input->post('password')))
 		{
 			$message = 'Wrong username or password';
@@ -65,6 +66,7 @@ class Login extends CI_Controller {
 		$data['detail'] = $loggedin;
 		echo json_encode($data);
 	}
+
 	public function changePwd()
 	{
 		$arry = array();
@@ -72,8 +74,8 @@ class Login extends CI_Controller {
 		$arry['message'] = "Id is mandatory.";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
-		$data['sId'] =  $this->encryption->decrypt($data['sessionId']);
-		if(!empty($data['sId']))
+		$data['uId'] =  $this->encryption->decrypt($data['uId']);
+		if(!empty($data['uId']))
 		{
             $arry['message'] = "Old Password is mandatory.";
 			if(!empty($data['oldpassword']))
@@ -82,7 +84,7 @@ class Login extends CI_Controller {
 				if($data['newpassword']!="")
 				{
 					$arry['message'] = "Something went wrong.";
-					$result = $this->employees->updatePasswordById($data);	
+					$result = $this->user->updatePasswordById($data);	
 					if($result)
 					{
 						$arry['status'] = "success";

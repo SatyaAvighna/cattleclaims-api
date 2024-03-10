@@ -20,6 +20,15 @@ Class employees extends CI_Model
 				{
 					$arry[$clumn_name] = $clumn_value;
 				}
+				// $rmId = $this->getemployeesById($arry['rmId']);
+				// $rvmId = $this->getemployeesById($arry['rvmId']);
+				$arry['dName'] = $this->getdepartmentsById($arry['dId'])['Department'];
+				$arry['dsName'] = $this->getdesignationsById($arry['dsId'])['Designation'];
+				$arry['etName'] = $this->getemployeetypeById($arry['etId'])['EmployeeType'];
+				$arry['rName'] = $this->getRoleById($arry['roId'])['rName'];
+				// $arry['rmName'] = $rmId['fName']." ".$rmId['lName'];
+				// $arry['rvmName'] = $rvmId['fName']." ".$rvmId['lName'];
+				$arry['docs'] = $this->getemployeesdocs($arry['employees_Id']);
 			}	
 			if($arry)$this->mc->memcached->save($key,$arry,0,0);
 		}
@@ -65,10 +74,9 @@ Class employees extends CI_Model
 		if(!empty($req["password"])) $set .= "password=".$this->db->escape($req["password"]).",";
 		if(!empty($req["emailId"])) $set .= "emailId=".$this->db->escape($req["emailId"]).",";
 		if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";
-		if(!empty($req["aProofPath"])) $set .= "aProof=".$this->db->escape($req["aProofPath"]).",";
-		if(!empty($req["panProofPath"])) $set .= "updatedBy=".$this->db->escape($req["panProofPath"]).",";
+		// if(!empty($req["aProofPath"])) $set .= "aProof=".$this->db->escape($req["aProofPath"]).",";
+		// if(!empty($req["panProofPath"])) $set .= "updatedBy=".$this->db->escape($req["panProofPath"]).",";
 
-		
 		if(!empty($set))
 		{
 			$setValue = rtrim($set,',');
@@ -86,11 +94,62 @@ Class employees extends CI_Model
 	public function insertemployeesById($req) 
 	{
 		$status = false;
-		$query =  $this->db->query("INSERT INTO employees(fName,lName,gender,dob,doj,dor,bloodGroup,pan,dId,dsId,mobile,aMobile,cPerson,rId,address,aProof,panProof,roId,rmId,rvmId,etId,eId,password,emailId,createdBy) VALUES (".$this->db->escape($req["fName"]).",".$this->db->escape($req["lName"]).",".$this->db->escape($req["gender"]).",".$this->db->escape($req["dob"]).",".$this->db->escape($req["doj"]).",".$this->db->escape($req["dor"]).",".$this->db->escape($req["bloodGroup"]).",".$this->db->escape($req["pan"]).",".$this->db->escape($req["dId"]).",".$this->db->escape($req["dsId"]).",".$this->db->escape($req["mobile"]).",".$this->db->escape($req["aMobile"]).",".$this->db->escape($req["cPerson"]).",".$this->db->escape($req["rId"]).",".$this->db->escape($req["address"]).",".$this->db->escape($req["aProofPath"]).",".$this->db->escape($req["panProofPath"]).",".$this->db->escape($req["roId"]).",".$this->db->escape($req["rmId"]).",".$this->db->escape($req["rvmId"]).",".$this->db->escape($req["etId"]).",".$this->db->escape($req["eId"]).",".$this->db->escape($req["password"]).",".$this->db->escape($req["emailId"]).",".$this->db->escape($req["sId"]).")");
+		$query =  $this->db->query("INSERT INTO employees(fName,lName,gender,dob,doj,dor,bloodGroup,pan,dId,dsId,mobile,aMobile,cPerson,rId,address,roId,rmId,rvmId,etId,eId,password,emailId,createdBy) VALUES (".$this->db->escape($req["fName"]).",".$this->db->escape($req["lName"]).",".$this->db->escape($req["gender"]).",".$this->db->escape($req["dob"]).",".$this->db->escape($req["doj"]).",".$this->db->escape($req["dor"]).",".$this->db->escape($req["bloodGroup"]).",".$this->db->escape($req["pan"]).",".$this->db->escape($req["dId"]).",".$this->db->escape($req["dsId"]).",".$this->db->escape($req["mobile"]).",".$this->db->escape($req["aMobile"]).",".$this->db->escape($req["cPerson"]).",".$this->db->escape($req["rId"]).",".$this->db->escape($req["address"]).",".$this->db->escape($req["roId"]).",".$this->db->escape($req["rmId"]).",".$this->db->escape($req["rvmId"]).",".$this->db->escape($req["etId"]).",".$this->db->escape($req["eId"]).",".$this->db->escape($req["password"]).",".$this->db->escape($req["emailId"]).",".$this->db->escape($req["sId"]).")");
 		if($this->db->affected_rows()>0)
 		{
 			//echo "i";
 			$this->mc->memcached->delete($this->config->config['cKey']."_employees");
+			$status = true;
+		}
+		return $status;
+	}
+	
+	public function updateDocumentsById($req) 
+	{
+		$status = false;
+		$set = "";
+		//Default_MName,price,staffId,tax,code,color,vendorType,priority
+		if(!empty($req["docType"])) $set .= "docType=".$this->db->escape($req["docType"]).",";
+		if(!empty($req["docPath"])) $set .= "docPath=".$this->db->escape($req["docPath"]).",";
+		if(!empty($set))
+		{
+			$setValue = rtrim($set,',');
+			$query =  $this->db->query("update employee_documents set ".$setValue." where edId = ".$req['edId']);
+			if($this->db->affected_rows()>0)
+			{
+				$this->mc->memcached->delete($this->config->config['cKey']."_employees");
+				$this->mc->memcached->delete($this->config->config['cKey']."_employees_detail".$req['employees_Id']);
+				$this->mc->memcached->delete($this->config->config['cKey']."_employees_docs_".$req["employees_Id"]);
+				$this->mc->memcached->delete($this->config->config['cKey']."_employees_doc_detail".$req['edId']);
+				$status = true;
+			}
+		}
+		return $status;
+	}
+	public function insertDocumentsById($req) 
+	{
+		$status = false;
+		$query =  $this->db->query("INSERT INTO employee_documents(eId,docType,docPath,createdBy) VALUES (".$this->db->escape($req["employees_Id"]).",".$this->db->escape($req["docType"]).",".$this->db->escape($req["docPath"]).",".$this->db->escape($req["sId"]).")");
+		if($this->db->affected_rows()>0)
+		{
+			//echo "i";
+			$this->mc->memcached->delete($this->config->config['cKey']."_employees");
+			$this->mc->memcached->delete($this->config->config['cKey']."_employees_docs_".$req["employees_Id"]);
+			$this->mc->memcached->delete($this->config->config['cKey']."_employees_detail".$req['employees_Id']);
+			$status = true;
+		}
+		return $status;
+	}
+	public function deleteDocumentsById($req) 
+	{
+		$status = false;
+		$query =  $this->db->query("delete from employee_documents where edId = ".$req['edId']);
+		if($this->db->affected_rows()>0)
+		{
+			$this->mc->memcached->delete($this->config->config['cKey']."_employees");
+			$this->mc->memcached->delete($this->config->config['cKey']."_employees_detail".$req['employees_Id']);
+			$this->mc->memcached->delete($this->config->config['cKey']."_employees_docs_".$req['employees_Id']);
+			$this->mc->memcached->delete($this->config->config['cKey']."_employees_doc_detail".$req['edId']);
 			$status = true;
 		}
 		return $status;
@@ -118,9 +177,10 @@ Class employees extends CI_Model
 				$list['rName'] = $this->getRoleById($list['roId'])['rName'];
 				$list['rmName'] = $rmId['fName']." ".$rmId['lName'];
 				$list['rvmName'] = $rvmId['fName']." ".$rvmId['lName'];
+				$list['docs'] = $this->getemployeesdocs($list['employees_Id']);
 				$arry[] = $list;
 			}	
-			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+			// if($arry)$this->mc->memcached->save($key,$arry,0,0);
 		}
 		return $arry;
 	}
@@ -132,6 +192,46 @@ Class employees extends CI_Model
 		{
 			$arry= array();
 			$query = $this->db->query("select * from employeetype where employeetype_Id=".$etId);
+			foreach($query->result() as $row)
+			{
+				foreach($row as $clumn_name=>$clumn_value)
+				{
+					$arry[$clumn_name] = $clumn_value;
+				}
+			}	
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
+	public function getemployeesdocs($eId) 
+	{
+		$key = $this->config->config['cKey']."_employees_docs_".$eId;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query = $this->db->query("select * from employee_documents where eId=".$eId);
+			foreach($query->result() as $row)
+			{
+				$list= array();
+				foreach($row as $clumn_name=>$clumn_value)
+				{
+					$list[$clumn_name] = $clumn_value;
+				}
+				$arry[] = $list;
+			}	
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
+	public function getemployeedocstypeById($edId) 
+	{
+		$key = $this->config->config['cKey']."_employees_doc_detail".$edId;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query = $this->db->query("select * from employee_documents where edId=".$edId);
 			foreach($query->result() as $row)
 			{
 				foreach($row as $clumn_name=>$clumn_value)
@@ -170,6 +270,7 @@ Class employees extends CI_Model
 		{
 			$arry= array();
 			$query = $this->db->query("select * from departments where departments_Id=".$dId);
+			// echo "select * from departments where departments_Id=".$dId;
 			foreach($query->result() as $row)
 			{
 				foreach($row as $clumn_name=>$clumn_value)

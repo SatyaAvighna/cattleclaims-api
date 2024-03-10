@@ -15,7 +15,7 @@ Class Common extends CI_Model
 		$password = $data['password'];
 		//echo $password;
 		//echo "select * from users where emailId =" . "'" . $data['username'] . "' AND " . "password=" . "'" . $password . "'";
-		$condition = "emailId =" . "'" . $data['username'] . "' AND " . "password=" . "'" . $password . "'";
+		$condition = "(emailId =" . "'" . $data['username'] . "' OR eId =" . "'" . $data['username'] . "') AND " . "password=" . "'" . $password . "'";
 		$this->db->select('*');
 		$this->db->from('employees');
 		$this->db->where($condition);
