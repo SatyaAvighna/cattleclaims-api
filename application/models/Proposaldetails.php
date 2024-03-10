@@ -43,7 +43,18 @@ Class proposaldetails extends CI_Model
 		$status = false;
 		$set = "";
 		//Default_MName,price,staffId,tax,code,color,vendorType,priority
-		if(!empty($req["insurerLogo"])) $set .= "insurerLogo=".$this->db->escape($req["insurerLogo"]).",";if(!empty($req["insurerName"])) $set .= "insurerName=".$this->db->escape($req["insurerName"]).",";if(!empty($req["premium"])) $set .= "premium=".$this->db->escape($req["premium"]).",";if(!empty($req["sumInsured"])) $set .= "sumInsured=".$this->db->escape($req["sumInsured"]).",";if(!empty($req["proposalId"])) $set .= "proposalId=".$this->db->escape($req["proposalId"]).",";if(!empty($req["policyNo"])) $set .= "policyNo=".$this->db->escape($req["policyNo"]).",";if(!empty($req["dummyOne"])) $set .= "dummyOne=".$this->db->escape($req["dummyOne"]).",";if(!empty($req["dummyTwo"])) $set .= "dummyTwo=".$this->db->escape($req["dummyTwo"]).",";if(!empty($req["dummyThree"])) $set .= "dummyThree=".$this->db->escape($req["dummyThree"]).",";if(!empty($req["dummyFour"])) $set .= "dummyFour=".$this->db->escape($req["dummyFour"]).",";if(!empty($req["dummyFive"])) $set .= "dummyFive=".$this->db->escape($req["dummyFive"]).",";if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
+		if(!empty($req["insurerLogo"])) $set .= "insurerLogo=".$this->db->escape($req["insurerLogo"]).",";
+		if(!empty($req["insurerName"])) $set .= "insurerName=".$this->db->escape($req["insurerName"]).",";
+		if(!empty($req["premium"])) $set .= "premium=".$this->db->escape($req["premium"]).",";
+		if(!empty($req["sumInsured"])) $set .= "sumInsured=".$this->db->escape($req["sumInsured"]).",";
+		if(!empty($req["proposalId"])) $set .= "proposalId=".$this->db->escape($req["proposalId"]).",";
+		if(!empty($req["policyNo"])) $set .= "policyNo=".$this->db->escape($req["policyNo"]).",";
+		if(!empty($req["dummyOne"])) $set .= "dummyOne=".$this->db->escape($req["dummyOne"]).",";
+		if(!empty($req["dummyTwo"])) $set .= "dummyTwo=".$this->db->escape($req["dummyTwo"]).",";
+		if(!empty($req["dummyThree"])) $set .= "dummyThree=".$this->db->escape($req["dummyThree"]).",";
+		if(!empty($req["dummyFour"])) $set .= "dummyFour=".$this->db->escape($req["dummyFour"]).",";
+		if(!empty($req["dummyFive"])) $set .= "dummyFive=".$this->db->escape($req["dummyFive"]).",";
+		if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
 		
 		if(!empty($set))
 		{

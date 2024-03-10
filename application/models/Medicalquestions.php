@@ -43,7 +43,21 @@ Class medicalquestions extends CI_Model
 		$status = false;
 		$set = "";
 		//Default_MName,price,staffId,tax,code,color,vendorType,priority
-		if(!empty($req["iD"])) $set .= "iD=".$this->db->escape($req["iD"]).",";if(!empty($req["productId"])) $set .= "productId=".$this->db->escape($req["productId"]).",";if(!empty($req["qnSetCode"])) $set .= "qnSetCode=".$this->db->escape($req["qnSetCode"]).",";if(!empty($req["qnCode"])) $set .= "qnCode=".$this->db->escape($req["qnCode"]).",";if(!empty($req["qnDescription"])) $set .= "qnDescription=".$this->db->escape($req["qnDescription"]).",";if(!empty($req["qnType"])) $set .= "qnType=".$this->db->escape($req["qnType"]).",";if(!empty($req["defaultValue"])) $set .= "defaultValue=".$this->db->escape($req["defaultValue"]).",";if(!empty($req["isKnockoutQn"])) $set .= "isKnockoutQn=".$this->db->escape($req["isKnockoutQn"]).",";if(!empty($req["acceptedResponses"])) $set .= "acceptedResponses=".$this->db->escape($req["acceptedResponses"]).",";if(!empty($req["knockoutResponses"])) $set .= "knockoutResponses=".$this->db->escape($req["knockoutResponses"]).",";if(!empty($req["dummyOne"])) $set .= "dummyOne=".$this->db->escape($req["dummyOne"]).",";if(!empty($req["dummyTwo"])) $set .= "dummyTwo=".$this->db->escape($req["dummyTwo"]).",";if(!empty($req["dummyThree"])) $set .= "dummyThree=".$this->db->escape($req["dummyThree"]).",";if(!empty($req["dummyFour"])) $set .= "dummyFour=".$this->db->escape($req["dummyFour"]).",";if(!empty($req["dummyFive"])) $set .= "dummyFive=".$this->db->escape($req["dummyFive"]).",";if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
+		if(!empty($req["productId"])) $set .= "productId=".$this->db->escape($req["productId"]).",";
+		if(!empty($req["qnSetCode"])) $set .= "qnSetCode=".$this->db->escape($req["qnSetCode"]).",";
+		if(!empty($req["qnCode"])) $set .= "qnCode=".$this->db->escape($req["qnCode"]).",";
+		if(!empty($req["qnDescription"])) $set .= "qnDescription=".$this->db->escape($req["qnDescription"]).",";
+		if(!empty($req["qnType"])) $set .= "qnType=".$this->db->escape($req["qnType"]).",";
+		if(!empty($req["defaultValue"])) $set .= "defaultValue=".$this->db->escape($req["defaultValue"]).",";
+		if(!empty($req["isKnockoutQn"])) $set .= "isKnockoutQn=".$this->db->escape($req["isKnockoutQn"]).",";
+		if(!empty($req["acceptedResponses"])) $set .= "acceptedResponses=".$this->db->escape($req["acceptedResponses"]).",";
+		if(!empty($req["knockoutResponses"])) $set .= "knockoutResponses=".$this->db->escape($req["knockoutResponses"]).",";
+		if(!empty($req["dummyOne"])) $set .= "dummyOne=".$this->db->escape($req["dummyOne"]).",";
+		if(!empty($req["dummyTwo"])) $set .= "dummyTwo=".$this->db->escape($req["dummyTwo"]).",";
+		if(!empty($req["dummyThree"])) $set .= "dummyThree=".$this->db->escape($req["dummyThree"]).",";
+		if(!empty($req["dummyFour"])) $set .= "dummyFour=".$this->db->escape($req["dummyFour"]).",";
+		if(!empty($req["dummyFive"])) $set .= "dummyFive=".$this->db->escape($req["dummyFive"]).",";
+		if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
 		
 		if(!empty($set))
 		{
@@ -52,7 +66,8 @@ Class medicalquestions extends CI_Model
 			if($this->db->affected_rows()>0)
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_medicalquestions");
-				$this->mc->memcached->delete($this->config->config['cKey']."_medicalquestions_detail".$req['medicalquestions_Id']);
+				$this->mc->memcached->delete($this->config->config['cKey']."_medicalquestions_detail".$req['medicalquestions_Id']);				
+				if(!empty($req["productId"])) $this->mc->memcached->delete($this->config->config['cKey']."_cattle_mqns_bpd".$req["productId"]);
 				$status = true;
 			}
 		}
@@ -62,11 +77,12 @@ Class medicalquestions extends CI_Model
 	public function insertmedicalquestionsById($req) 
 	{
 		$status = false;
-		$query =  $this->db->query("INSERT INTO medicalquestions(iD,productId,qnSetCode,qnCode,qnDescription,qnType,defaultValue,isKnockoutQn,acceptedResponses,knockoutResponses,dummyOne,dummyTwo,dummyThree,dummyFour,dummyFive,createdBy) VALUES (".$this->db->escape($req["iD"]).",".$this->db->escape($req["productId"]).",".$this->db->escape($req["qnSetCode"]).",".$this->db->escape($req["qnCode"]).",".$this->db->escape($req["qnDescription"]).",".$this->db->escape($req["qnType"]).",".$this->db->escape($req["defaultValue"]).",".$this->db->escape($req["isKnockoutQn"]).",".$this->db->escape($req["acceptedResponses"]).",".$this->db->escape($req["knockoutResponses"]).",".$this->db->escape($req["dummyOne"]).",".$this->db->escape($req["dummyTwo"]).",".$this->db->escape($req["dummyThree"]).",".$this->db->escape($req["dummyFour"]).",".$this->db->escape($req["dummyFive"]).",".$this->db->escape($req["sId"]).")");
+		$query =  $this->db->query("INSERT INTO medicalquestions(productId,qnSetCode,qnCode,qnDescription,qnType,defaultValue,isKnockoutQn,acceptedResponses,knockoutResponses,dummyOne,dummyTwo,dummyThree,dummyFour,dummyFive,createdBy) VALUES (".$this->db->escape($req["productId"]).",".$this->db->escape($req["qnSetCode"]).",".$this->db->escape($req["qnCode"]).",".$this->db->escape($req["qnDescription"]).",".$this->db->escape($req["qnType"]).",".$this->db->escape($req["defaultValue"]).",".$this->db->escape($req["isKnockoutQn"]).",".$this->db->escape($req["acceptedResponses"]).",".$this->db->escape($req["knockoutResponses"]).",".$this->db->escape($req["dummyOne"]).",".$this->db->escape($req["dummyTwo"]).",".$this->db->escape($req["dummyThree"]).",".$this->db->escape($req["dummyFour"]).",".$this->db->escape($req["dummyFive"]).",".$this->db->escape($req["sId"]).")");
 		if($this->db->affected_rows()>0)
 		{
 			//echo "i";
 			$this->mc->memcached->delete($this->config->config['cKey']."_medicalquestions");
+			$this->mc->memcached->delete($this->config->config['cKey']."_cattle_mqns_bpd".$this->db->escape($req["productID"]);
 			$status = true;
 		}
 		return $status;
@@ -92,5 +108,6 @@ Class medicalquestions extends CI_Model
 		}
 		return $arry;
 	}
+	
 } 
 ?> 

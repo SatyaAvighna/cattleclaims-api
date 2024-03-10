@@ -43,7 +43,8 @@ Class animaltype extends CI_Model
 		$status = false;
 		$set = "";
 		//Default_MName,price,staffId,tax,code,color,vendorType,priority
-		if(!empty($req["animalId"])) $set .= "animalId=".$this->db->escape($req["animalId"]).",";if(!empty($req["animalType"])) $set .= "animalType=".$this->db->escape($req["animalType"]).",";if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
+		if(!empty($req["animalType"])) $set .= "animalType=".$this->db->escape($req["animalType"]).",";
+		if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
 		
 		if(!empty($set))
 		{
@@ -62,7 +63,7 @@ Class animaltype extends CI_Model
 	public function insertanimaltypeById($req) 
 	{
 		$status = false;
-		$query =  $this->db->query("INSERT INTO animaltype(animalId,animalType,createdBy) VALUES (".$this->db->escape($req["animalId"]).",".$this->db->escape($req["animalType"]).",".$this->db->escape($req["sId"]).")");
+		$query =  $this->db->query("INSERT INTO animaltype(animalType,createdBy) VALUES (".$this->db->escape($req["animalType"]).",".$this->db->escape($req["sId"]).")");
 		if($this->db->affected_rows()>0)
 		{
 			//echo "i";

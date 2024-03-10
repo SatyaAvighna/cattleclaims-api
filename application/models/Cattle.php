@@ -120,5 +120,43 @@ Class Cattle extends CI_Model
 		}
 		return $arry;
 	}
+	function getMedicalqns($bseprdtId) 
+	{
+		$key = $this->config->config['cKey']."_cattle_mqns_bpd".$bseprdtId;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query =  $this->db->query("select medicalquestions_Id,productId,qnSetCode,qnCode,qnDescription,qnType,defaultValue,isKnockoutQn,acceptedResponses,knockoutResponses,dummyOne,dummyTwo,dummyThree,dummyFour,dummyFive from medicalquestions where productId=".$bseprdtId);
+			foreach($query->result() as $row)
+			{
+				foreach($row as $column_name=>$column_value)
+				{
+					$arry[$column_name] = $column_value;
+				}
+			}	
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
+	function getAnimalqns($bseprdtId) 
+	{
+		$key = $this->config->config['cKey']."_cattle_aadqn_bpd".$bseprdtId;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query =  $this->db->query("select medicalquestions_Id,productId,qnSetCode,qnCode,qnDescription,qnType,defaultValue,isKnockoutQn,acceptedResponses,knockoutResponses,dummyOne,dummyTwo,dummyThree,dummyFour,dummyFive from animalquestions where productId=".$bseprdtId);
+			foreach($query->result() as $row)
+			{
+				foreach($row as $column_name=>$column_value)
+				{
+					$arry[$column_name] = $column_value;
+				}
+			}	
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
 } 
 ?> 

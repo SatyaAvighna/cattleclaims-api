@@ -215,7 +215,27 @@ class Cattles extends CI_Controller {
 		if(!empty($data['baseproductId']))
 		{	
 			$arry['message'] = "Something went wrong.";	
-			$result = $this->cattle->getMedicalqns($data);	
+			$result = $this->cattle->getMedicalqns($data['baseproductId']);	
+			if($result)
+			{
+				$arry['status'] = "success";
+				$arry['message'] = "Medicalqns Retirved successfully.";	
+				$arry['medicalqns'] = $result;
+			}
+		}
+		echo json_encode($arry);
+	}
+	public function getAnmlAddlqns()
+	{
+		$arry = array();
+		$data =$this->input->post();
+		// sumInsured,animalType,breed,gender,age
+		$arry['message'] = "Base Procuct Id is mandatory.";
+		$arry['medicalqns'] = [];
+		if(!empty($data['baseproductId']))
+		{	
+			$arry['message'] = "Something went wrong.";	
+			$result = $this->cattle->getMedicalqns($data['baseproductId']);	
 			if($result)
 			{
 				$arry['status'] = "success";

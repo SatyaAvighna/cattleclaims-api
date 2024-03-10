@@ -43,7 +43,8 @@ Class breedlist extends CI_Model
 		$status = false;
 		$set = "";
 		//Default_MName,price,staffId,tax,code,color,vendorType,priority
-		if(!empty($req["breedId"])) $set .= "breedId=".$this->db->escape($req["breedId"]).",";if(!empty($req["breedName"])) $set .= "breedName=".$this->db->escape($req["breedName"]).",";if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
+s		if(!empty($req["breedName"])) $set .= "breedName=".$this->db->escape($req["breedName"]).",";
+		if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
 		
 		if(!empty($set))
 		{
@@ -62,7 +63,7 @@ Class breedlist extends CI_Model
 	public function insertbreedlistById($req) 
 	{
 		$status = false;
-		$query =  $this->db->query("INSERT INTO breedlist(breedId,breedName,createdBy) VALUES (".$this->db->escape($req["breedId"]).",".$this->db->escape($req["breedName"]).",".$this->db->escape($req["sId"]).")");
+		$query =  $this->db->query("INSERT INTO breedlist(breedName,createdBy) VALUES (".$this->db->escape($req["breedName"]).",".$this->db->escape($req["sId"]).")");
 		if($this->db->affected_rows()>0)
 		{
 			//echo "i";
