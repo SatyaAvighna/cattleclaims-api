@@ -155,6 +155,7 @@ class Masters extends CI_Controller {
 			echo "failed to copy $m_path_new...\n";
 		}
 		$this->replace_wihtTavbleName_C("\$tableName",$data['tableName'],$c_path_new);
+		$this->replace_wihtTavbleName_C("\$tableNameC",ucfirst($data['tableName']),$c_path_new);
 		$this->replace_wihtTavbleName_M("\$tableName",$data['tableName'],$m_path_new,$fields);
 	}
 	public function replace_wihtTavbleName_C($ostring,$nstring,$fpath)

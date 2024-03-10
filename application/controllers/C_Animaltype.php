@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class animaltype extends CI_Controller {
+class C_Animaltype extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
