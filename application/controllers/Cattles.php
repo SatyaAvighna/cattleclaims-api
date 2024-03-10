@@ -169,4 +169,60 @@ class Cattles extends CI_Controller {
 		}
 		echo json_encode($arry);
 	}
+	public function getPremiums()
+	{
+		$arry = array();
+		$data =$this->input->post();
+		// sumInsured,animalType,breed,gender,age
+		$arry['message'] = "Sum Insured is mandatory.";
+		$arry['quotes'] = [];
+		if(!empty($data['sumInsured']))
+		{	
+			$arry['message'] = "Animal type is mandatory.";
+			if(!empty($data['animalType']))
+			{	
+				$arry['message'] = "Breed is mandatory.";
+				if(!empty($data['breed']))
+				{	
+					$arry['message'] = "Gender is mandatory.";
+					if(!empty($data['gender']))
+					{	
+						$arry['message'] = "Age  is mandatory.";
+						if(!empty($data['age']))
+						{	
+							$arry['message'] = "Something went wrong.";	
+							$result = $this->cattle->getQuotes($data);	
+							if($result)
+							{
+								$arry['status'] = "success";
+								$arry['message'] = "Quotes Retirved successfully.";	
+								$arry['quotes'] = $result;
+							}
+						}
+					}
+				}
+			}
+		}
+		echo json_encode($arry);
+	}
+	public function getMedicalqns()
+	{
+		$arry = array();
+		$data =$this->input->post();
+		// sumInsured,animalType,breed,gender,age
+		$arry['message'] = "Base Procuct Id is mandatory.";
+		$arry['medicalqns'] = [];
+		if(!empty($data['baseproductId']))
+		{	
+			$arry['message'] = "Something went wrong.";	
+			$result = $this->cattle->getMedicalqns($data);	
+			if($result)
+			{
+				$arry['status'] = "success";
+				$arry['message'] = "Medicalqns Retirved successfully.";	
+				$arry['medicalqns'] = $result;
+			}
+		}
+		echo json_encode($arry);
+	}
 }
