@@ -51,16 +51,15 @@ class LoginUser extends CI_Controller {
 					  'mode' => 'ctr'
 					));
 				$sessionId = $this->encryption->encrypt($loggedin['uId']);
-				$loggedin['sessionId'] =  $sessionId;
+				// $loggedin['sessionId'] =  $sessionId;
 				// echo $loggedin['sessionId'];
 				//$this->session->set_userdata($loggedin['sessionId'], $loggedin);
 				$message = 'Logged successfully..';
 				$data['status'] = 'success';
-				
+				$data['sessionId'] = $sessionId;
 			}
 		}
 		// echo "sessionId";
-		$data['sessionId'] = $sessionId;
 		$data['message'] = $message;
 		$data['detail'] = $loggedin;
 		echo json_encode($data);

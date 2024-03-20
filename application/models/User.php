@@ -26,7 +26,7 @@ Class User extends CI_Model
 		return $arry;
 	}
 	public function deleteuserById($req) 
-	{s
+	{
 		$status = false;
 		$query =  $this->db->query("delete from users where uId = ".$req['uId']);
 		if($this->db->affected_rows()>0)
@@ -82,7 +82,7 @@ Class User extends CI_Model
 		if(!$arry)
 		{
 			$arry= array();
-			$query = $this->db->query("select * from user");
+			$query = $this->db->query("select * from users");
 			foreach($query->result() as $row)
 			{
 				$list= array();
@@ -90,14 +90,7 @@ Class User extends CI_Model
 				{
 					$list[$clumn_name] = $clumn_value;
 				}
-				$rmId = $this->getuserById($list['rmId']);
-				$rvmId = $this->getuserById($list['rvmId']);
-				$list['dName'] = $this->getdepartmentsById($list['dId'])['Department'];
-				$list['dsName'] = $this->getdesignationsById($list['dsId'])['Designation'];
-				$list['etName'] = $this->getemployeetypeById($list['etId'])['EmployeeType'];
-				$list['rName'] = $this->getRoleById($list['roId'])['rName'];
-				$list['rmName'] = $rmId['fName']." ".$rmId['lName'];
-				$list['rvmName'] = $rvmId['fName']." ".$rvmId['lName'];
+				
 				$arry[] = $list;
 			}	
 			if($arry)$this->mc->memcached->save($key,$arry,0,0);
@@ -206,7 +199,7 @@ Class User extends CI_Model
 		$status = array();
 		$condition = "emailId ='".$req['emailId']."'";
 		$this->db->select('*');
-		$this->db->from('user');
+		$this->db->from('users');
 		$this->db->where($condition);
 		$this->db->limit(1);
 		$query = $this->db->get();

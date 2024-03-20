@@ -29,11 +29,11 @@ Class Common extends CI_Model
 	public function loginUser($data) 
 	{ 
 	 	//print_r($data);
-		// $password = hash_hmac("md5",$data['password'],"donotouchapnap");
-		$password = $data['password'];
-		//echo $password;
-		//echo "select * from users where emailId =" . "'" . $data['username'] . "' AND " . "password=" . "'" . $password . "'";
-		$condition = "(emailId =" . "'" . $data['username'] . "' OR eId =" . "'" . $data['username'] . "') AND " . "password=" . "'" . $password . "'";
+		$password = hash_hmac("md5",$data['password'],"donotouchapnap");
+		// $password = $data['password'];
+		// echo $password;
+		// echo "select * from users where emailId =" . "'" . $data['username'] . "' AND " . "password=" . "'" . $password . "'";
+		$condition = "emailId =" . "'" . $data['username'] . "' AND " . "password=" . "'" . $password . "'";
 		$this->db->select('uId,fName,lName,gender,mobile,address,password,emailId');
 		$this->db->from('users');
 		$this->db->where($condition);
