@@ -95,6 +95,7 @@ class Users extends CI_Controller {
 		$arry['status'] = "error";
 		$data =$this->input->post();
 		$arry['message'] = "Id is mandatory.";
+		$lists = array();
 		if(!empty($data['uId']))
 		{
 			$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
