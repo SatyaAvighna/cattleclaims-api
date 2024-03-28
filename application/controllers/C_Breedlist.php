@@ -116,4 +116,14 @@ class C_Breedlist extends CI_Controller {
 		$arry['list'] = $breedlist;
 		echo json_encode($arry);
 	}
+	public function listByanimalType()
+	{
+		$arry = array();
+		$data =$this->input->post();
+		$breedlist = $this->breedlist->getbreedlistsByanimalType($data['animalType']);
+		$arry['status'] = "success";
+		$arry['message'] = "Entry retrieved successfully.";	
+		$arry['list'] = $breedlist;
+		echo json_encode($arry);
+	}
 }

@@ -43,7 +43,8 @@ Class breedlist extends CI_Model
 		$status = false;
 		$set = "";
 		//Default_MName,price,staffId,tax,code,color,vendorType,priority
-s		if(!empty($req["breedName"])) $set .= "breedName=".$this->db->escape($req["breedName"]).",";
+		if(!empty($req["breedName"])) $set .= "breedName=".$this->db->escape($req["breedName"]).",";
+		if(!empty($req["animalType"])) $set .= "animalType=".$this->db->escape($req["animalType"]).",";
 		if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
 		
 		if(!empty($set))
@@ -54,6 +55,7 @@ s		if(!empty($req["breedName"])) $set .= "breedName=".$this->db->escape($req["br
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_breedlist");
 				$this->mc->memcached->delete($this->config->config['cKey']."_breedlist_detail".$req['breedlist_Id']);
+				if(!empty($req["animalType"]))$this->config->config['cKey']."_breedlistbyaT_".$req["animalType"];
 				$status = true;
 			}
 		}
@@ -63,11 +65,12 @@ s		if(!empty($req["breedName"])) $set .= "breedName=".$this->db->escape($req["br
 	public function insertbreedlistById($req) 
 	{
 		$status = false;
-		$query =  $this->db->query("INSERT INTO breedlist(breedName,createdBy) VALUES (".$this->db->escape($req["breedName"]).",".$this->db->escape($req["sId"]).")");
+		$query =  $this->db->query("INSERT INTO breedlist(breedName,animalType,createdBy) VALUES (".$this->db->escape($req["breedName"]).",".$this->db->escape($req["animalType"]).",".$this->db->escape($req["sId"]).")");
 		if($this->db->affected_rows()>0)
 		{
 			//echo "i";
 			$this->mc->memcached->delete($this->config->config['cKey']."_breedlist");
+			if(!empty($req["animalType"]))$this->config->config['cKey']."_breedlistbyaT_".$req["animalType"];
 			$status = true;
 		}
 		return $status;
@@ -80,6 +83,27 @@ s		if(!empty($req["breedName"])) $set .= "breedName=".$this->db->escape($req["br
 		{
 			$arry= array();
 			$query = $this->db->query("select * from breedlist");
+			foreach($query->result() as $row)
+			{
+				$list= array();
+				foreach($row as $clumn_name=>$clumn_value)
+				{
+					$list[$clumn_name] = $clumn_value;
+				}
+				$arry[] = $list;
+			}	
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
+	public function getbreedlistsByanimalType($animalType) 
+	{
+		$key = $this->config->config['cKey']."_breedlistbyaT_".$animalType;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query = $this->db->query("select * from breedlist where animalType=".$this->db->escape($req["animalType"])."");
 			foreach($query->result() as $row)
 			{
 				$list= array();
