@@ -82,7 +82,7 @@ Class medicalquestions extends CI_Model
 		{
 			//echo "i";
 			$this->mc->memcached->delete($this->config->config['cKey']."_medicalquestions");
-			$this->mc->memcached->delete($this->config->config['cKey']."_cattle_mqns_bpd".$this->db->escape($req["productID"]);
+			$this->mc->memcached->delete($this->config->config['cKey']."_cattle_mqns_bpd".$this->db->escape($req["productID"].""));
 			$status = true;
 		}
 		return $status;
