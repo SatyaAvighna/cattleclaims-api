@@ -109,6 +109,7 @@ Class Cattle extends CI_Model
 	{
 		$arry= array();
 		$query =  $this->db->query("select sumInsured,animalType,breed,gender,age,baseproductId,risk,premium from plansintegrated where sumInsured=".$this->db->escape($req['sumInsured'])." and animalType=".$this->db->escape($req['animalType'])." and breed=".$this->db->escape($req['breed'])." and gender=".$this->db->escape($req['gender'])." and age=".$this->db->escape($req['age'])."");
+		// echo "select sumInsured,animalType,breed,gender,age,baseproductId,risk,premium from plansintegrated where sumInsured=".$this->db->escape($req['sumInsured'])." and animalType=".$this->db->escape($req['animalType'])." and breed=".$this->db->escape($req['breed'])." and gender=".$this->db->escape($req['gender'])." and age=".$this->db->escape($req['age'])."";
 		foreach ($query->result() as $row)
 		{
 			$list= array();
@@ -128,6 +129,7 @@ Class Cattle extends CI_Model
 		{
 			$arry= array();
 			$query =  $this->db->query("select medicalquestions_Id,productId,qnSetCode,qnCode,qnDescription,qnType,defaultValue,isKnockoutQn,acceptedResponses,knockoutResponses,dummyOne,dummyTwo,dummyThree,dummyFour,dummyFive from medicalquestions where productId=".$bseprdtId);
+			// echo "select medicalquestions_Id,productId,qnSetCode,qnCode,qnDescription,qnType,defaultValue,isKnockoutQn,acceptedResponses,knockoutResponses,dummyOne,dummyTwo,dummyThree,dummyFour,dummyFive from medicalquestions where productId=".$bseprdtId;
 			foreach($query->result() as $row)
 			{
 				foreach($row as $column_name=>$column_value)

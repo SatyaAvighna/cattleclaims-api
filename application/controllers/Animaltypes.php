@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class C_Animaltype extends CI_Controller {
+class Animaltypes extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -110,7 +110,7 @@ class C_Animaltype extends CI_Controller {
 	public function list()
 	{
 		$arry = array();
-		$animaltype = $this->animaltype->getanimaltypes();
+		$animaltype = $this->animaltype->getanimalRtypes();
 		$arry['status'] = "success";
 		$arry['message'] = "Entry retrieved successfully.";	
 		$arry['list'] = $animaltype;

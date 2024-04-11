@@ -32,6 +32,7 @@ Class animaltype extends CI_Model
 		if($this->db->affected_rows()>0)
 		{
 			$this->mc->memcached->delete($this->config->config['cKey']."_animaltype");
+			$this->mc->memcached->delete($this->config->config['cKey']."_animaltypes");
 			$this->mc->memcached->delete($this->config->config['cKey']."_animaltype_detail".$req['animaltype_Id']);
 			$status = true;
 		}
@@ -53,6 +54,7 @@ Class animaltype extends CI_Model
 			if($this->db->affected_rows()>0)
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_animaltype");
+				$this->mc->memcached->delete($this->config->config['cKey']."_animaltypes");
 				$this->mc->memcached->delete($this->config->config['cKey']."_animaltype_detail".$req['animaltype_Id']);
 				$status = true;
 			}
@@ -68,6 +70,7 @@ Class animaltype extends CI_Model
 		{
 			//echo "i";
 			$this->mc->memcached->delete($this->config->config['cKey']."_animaltype");
+			$this->mc->memcached->delete($this->config->config['cKey']."_animaltypes");
 			$status = true;
 		}
 		return $status;
@@ -80,6 +83,27 @@ Class animaltype extends CI_Model
 		{
 			$arry= array();
 			$query = $this->db->query("select * from animaltype");
+			foreach($query->result() as $row)
+			{
+				$list= array();
+				foreach($row as $clumn_name=>$clumn_value)
+				{
+					$list[$clumn_name] = $clumn_value;
+				}
+				$arry[] = $list;
+			}	
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
+	public function getanimalRtypes() 
+	{
+		$key = $this->config->config['cKey']."_animaltypes";
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query = $this->db->query("select animaltype_Id,animalType,status from animaltype");
 			foreach($query->result() as $row)
 			{
 				$list= array();

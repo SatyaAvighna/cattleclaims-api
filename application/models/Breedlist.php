@@ -103,7 +103,7 @@ Class breedlist extends CI_Model
 		if(!$arry)
 		{
 			$arry= array();
-			$query = $this->db->query("select * from breedlist where animalType=".$this->db->escape($req["animalType"])."");
+			$query = $this->db->query("select breedlist_Id,breedName,animalType,status from breedlist where animalType=".$this->db->escape($animalType)."");
 			foreach($query->result() as $row)
 			{
 				$list= array();

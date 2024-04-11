@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class C_Breedlist extends CI_Controller {
+class Breeds extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -116,7 +116,7 @@ class C_Breedlist extends CI_Controller {
 		$arry['list'] = $breedlist;
 		echo json_encode($arry);
 	}
-	public function listByanimalType()
+	public function listbyanimaltype()
 	{
 		$arry = array();
 		$data =$this->input->post();
