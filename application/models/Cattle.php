@@ -43,12 +43,12 @@ Class Cattle extends CI_Model
 		$status = false;
 		$set = "";
         //cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath,createdBy
-		// if(!empty($req['cattle'])) $set .= "cattle=".$this->db->escape($req['cattle']).",";
-		// if(!empty($req['tagnumber'])) $set .= "tagnumber=".$this->db->escape($req['tagnumber']).",";
-		// if(!empty($req['breed'])) $set .= "breed=".$this->db->escape($req['breed']).",";
-		// if(!empty($req['gender'])) $set .= "gender=".$this->db->escape($req['gender']).",";
-		// if(!empty($req['age'])) $set .= "age=".$this->db->escape($req['age']).",";
-		// if(!empty($req['sumInsured'])) $set .= "sumInsured=".$this->db->escape($req['sumInsured']).",";
+		if(!empty($req['cattle'])) $set .= "cattle=".$this->db->escape($req['cattle']).",";
+		if(!empty($req['tagnumber'])) $set .= "tagnumber=".$this->db->escape($req['tagnumber']).",";
+		if(!empty($req['breed'])) $set .= "breed=".$this->db->escape($req['breed']).",";
+		if(!empty($req['gender'])) $set .= "gender=".$this->db->escape($req['gender']).",";
+		if(!empty($req['age'])) $set .= "age=".$this->db->escape($req['age']).",";
+		if(!empty($req['sumInsured'])) $set .= "sumInsured=".$this->db->escape($req['sumInsured']).",";
 		if(!empty($req['earTag'])) $set .= "earTag=".$this->db->escape($req['earTag']).",";
 		if(!empty($req['lSidePath'])) $set .= "lSidePath=".$this->db->escape($req['lSidePath']).",";
 		if(!empty($req['rSidePath'])) $set .= "rSidePath=".$this->db->escape($req['rSidePath']).",";
@@ -57,7 +57,7 @@ Class Cattle extends CI_Model
 		if(!empty($set))
 		{
 			$setValue = rtrim($set,',');
-			//echo "update cattles set ".$setValue." where cId= ".$req['cId'];
+			// echo "update cattles set ".$setValue." where cId= ".$req['cId'];
 			$query =  $this->db->query("update cattles set ".$setValue." where cId= ".$req['cId']);
 			if($this->db->affected_rows()>0)
 			{
@@ -70,7 +70,7 @@ Class Cattle extends CI_Model
 	}
 	public function insertCattleById($req) 
 	{
-		$status = false;
+		$status = 0;
 		$favexits = $this->db->query("select cId from cattles where tagnumber=".$this->db->escape($req['tagnumber']));
 		if($favexits->num_rows() <= 0)
 		{
@@ -78,7 +78,7 @@ Class Cattle extends CI_Model
 			if($this->db->affected_rows()>0)
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_cattles");
-				$status = true;
+				$status = $this->db->insert_id();
 			}
 		}
 		return $status;

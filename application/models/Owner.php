@@ -67,7 +67,8 @@ Class Owner extends CI_Model
 	}
 	public function insertOwnerById($req) 
 	{
-		$status = false;
+		$status = 0;
+		// print_r($req);
 		$favexits = $this->db->query("select oId from owners where oName=".$this->db->escape($req['oName']));
 		if($favexits->num_rows() <= 0)
 		{
@@ -75,7 +76,7 @@ Class Owner extends CI_Model
 			if($this->db->affected_rows()>0)
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_owners");
-				$status = true;
+				$status = $this->db->insert_id();
 			}
 		}
 		return $status;

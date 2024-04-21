@@ -40,8 +40,9 @@ class Cattles extends CI_Controller {
 		$arry['message'] = "Cattle is mandatory.";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
-		$data['sId'] =  $this->encryption->decrypt($data['uId']);
+		// $data['sId'] =  $this->encryption->decrypt($data['uId']);
         // cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath
+		$cId = 0;
 		if(!empty($data['cattle']))
 		{
 			$arry['message'] = "Tag Number is mandatory.";
@@ -65,6 +66,7 @@ class Cattles extends CI_Controller {
                                 {
                                     $arry['status'] = "success";
                                     $arry['message'] = "Cattle created successfully.";	
+									$cId = $result;
                                 }
                             }
                         }
@@ -72,6 +74,7 @@ class Cattles extends CI_Controller {
                 }
             }
 		}
+		$arry['cId'] = $cId;
 		echo json_encode($arry);
 	}
 	public function retrive()
@@ -96,7 +99,51 @@ class Cattles extends CI_Controller {
 		$arry['message'] = "Id is mandatory.";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
-		$data['sId'] =  $this->encryption->decrypt($data['uId']);
+		// $data['sId'] =  $this->encryption->decrypt($data['uId']);
+		if(!empty($data['cId']))
+		{
+			if(!empty($data['cattle']))
+			{
+				$arry['message'] = "Tag Number is mandatory.";
+				if($data['tagnumber']!="")
+				{
+					$arry['message'] = "Breed is mandatory.";
+					if($data['breed']!="")
+					{
+						$arry['message'] = "Gender is mandatory.";
+						if($data['gender']!="")
+						{
+							$arry['message'] = "Age is mandatory.";
+							if($data['age']!="")
+							{
+								$arry['message'] = "Sum Insured is mandatory.";
+								if($data['sumInsured']!="")
+								{
+									$arry['message'] = "Something went wrong.";
+									$result = $this->cattle->updateCattleById($data);	
+									if($result)
+									{
+										$arry['status'] = "success";
+										$arry['message'] = "Cattle updated successfully.";	
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		echo json_encode($arry);
+	}
+	
+	public function updatePaths()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$arry['message'] = "Id is mandatory.";
+		$data =$this->input->post();
+		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
+		// $data['sId'] =  $this->encryption->decrypt($data['uId']);
 		if(!empty($data['cId']))
 		{
             // cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath
@@ -121,7 +168,6 @@ class Cattles extends CI_Controller {
 		}
 		echo json_encode($arry);
 	}
-	
 	public function delete()
 	{
 		$arry = array();
@@ -129,7 +175,7 @@ class Cattles extends CI_Controller {
 		$arry['message'] = "Id is mandatory.";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
-		$data['sId'] =  $this->encryption->decrypt($data['uId']);
+		// $data['sId'] =  $this->encryption->decrypt($data['uId']);
 		if(!empty($data['cId']))
 		{	
 			$arry['message'] = "Something went wrong.";	
@@ -157,7 +203,7 @@ class Cattles extends CI_Controller {
 		$arry['message'] = "Id is mandatory.";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
-		$data['sId'] =  $this->encryption->decrypt($data['uId']);
+		// $data['sId'] =  $this->encryption->decrypt($data['uId']);
 		if(!empty($data['cId']))
 		{
 			$result = $this->cattle->updateCattleStatusById($data);	

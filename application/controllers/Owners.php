@@ -40,7 +40,9 @@ class Owners extends CI_Controller {
 		$arry['message'] = "Name is mandatory.";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
-		$data['sId'] =  $this->encryption->decrypt($data['sId']);
+		// print_r($data);
+		// $data['sId'] =  $this->encryption->decrypt($data['sId']);
+		$oId = 0;
         // oName,oMobile,oAadhar,oAddress,oPincode,oDistrict,oState
 		if(!empty($data['oName']))
 		{
@@ -67,7 +69,8 @@ class Owners extends CI_Controller {
                                     if($result)
                                     {
                                         $arry['status'] = "success";
-                                        $arry['message'] = "Owner created successfully.";	
+                                        $arry['message'] = "Owner created successfully.";
+										$oId = $result;	
                                     }
                                 }
                             }
@@ -76,6 +79,7 @@ class Owners extends CI_Controller {
                 }
             }
 		}
+		$arry['oId'] = $oId;		
 		echo json_encode($arry);
 	}
 	public function retrive()
@@ -100,7 +104,7 @@ class Owners extends CI_Controller {
 		$arry['message'] = "Id is mandatory.";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
-		$data['sId'] =  $this->encryption->decrypt($data['sId']);
+		//$data['sId'] =  $this->encryption->decrypt($data['sId']);
 		if(!empty($data['oId']))
 		{
             $arry['message'] = "Name is mandatory.";
@@ -149,7 +153,7 @@ class Owners extends CI_Controller {
 		$arry['message'] = "Id is mandatory.";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
-		$data['sId'] =  $this->encryption->decrypt($data['sId']);
+		// $data['sId'] =  $this->encryption->decrypt($data['sId']);
 		if(!empty($data['oId']))
 		{	
 			$arry['message'] = "Something went wrong.";	
@@ -177,7 +181,7 @@ class Owners extends CI_Controller {
 		$arry['message'] = "Id is mandatory.";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
-		$data['sId'] =  $this->encryption->decrypt($data['sId']);
+		// $data['sId'] =  $this->encryption->decrypt($data['sId']);
 		if(!empty($data['oId']))
 		{
 			$result = $this->owner->updateOwnerStatusById($data);	
