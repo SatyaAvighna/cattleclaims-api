@@ -14,7 +14,7 @@ Class Gateway extends CI_Model
 		{
 			$arry= array();
 			// pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,createdOn,pgStatus
-			$query =  $this->db->query("select pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,pgStatus from pgorders");
+			$query =  $this->db->query("select pgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,pgStatus from pgorders");
 			foreach ($query->result() as $row)
 			{
 				$list= array();
@@ -36,7 +36,7 @@ Class Gateway extends CI_Model
 		{
 			$arry= array();
 			// pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,createdOn,pgStatus
-			$query =  $this->db->query("select pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,pgStatus from pgorders where pgoId=".$pgoId);
+			$query =  $this->db->query("select pgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,pgStatus from pgorders where pgoId=".$pgoId);
 			foreach($query->result() as $row)
 			{
 				foreach($row as $column_name=>$column_value)
@@ -56,7 +56,7 @@ Class Gateway extends CI_Model
 		{
 			$arry= array();
 			// pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,createdOn,pgStatus
-			$query =  $this->db->query("select pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,pgStatus from pgorders where orderId=".$orderId);
+			$query =  $this->db->query("select pgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,pgStatus from pgorders where orderId=".$orderId);
 			foreach($query->result() as $row)
 			{
 				foreach($row as $column_name=>$column_value)
