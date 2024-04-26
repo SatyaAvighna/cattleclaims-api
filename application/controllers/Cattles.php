@@ -43,7 +43,8 @@ class Cattles extends CI_Controller {
 		// $data['sId'] =  $this->encryption->decrypt($data['uId']);
         // cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath
 		$cId = 0;
-		if(!empty($data['cattle']))
+		$proposalId = 0;
+		if(!empty($data['animalType']))
 		{
 			$arry['message'] = "Tag Number is mandatory.";
             if($data['tagnumber']!="")
@@ -60,14 +61,19 @@ class Cattles extends CI_Controller {
                             $arry['message'] = "Sum Insured is mandatory.";
                             if($data['sumInsured']!="")
                             {
-                                $arry['message'] = "Something went wrong.";
-                                $result = $this->cattle->insertCattleById($data);	
-                                if($result)
-                                {
-                                    $arry['status'] = "success";
-                                    $arry['message'] = "Cattle created successfully.";	
-									$cId = $result;
-                                }
+								$arry['message'] = "Owner ID is mandatory.";
+								if($data['ownerId']!="")
+								{
+									$arry['message'] = "Something went wrong.";
+									$result = $this->cattle->insertCattleById($data);	
+									if($result['cId']>0)
+									{
+										$arry['status'] = "success";
+										$arry['message'] = "Cattle created successfully.";	
+										$cId = $result['cId'];
+										$proposalId = $result['proposalId'];
+									}
+								}
                             }
                         }
                     }
@@ -75,6 +81,7 @@ class Cattles extends CI_Controller {
             }
 		}
 		$arry['cId'] = $cId;
+		$arry['proposalId'] = $proposalId;
 		echo json_encode($arry);
 	}
 	public function retrive()
@@ -218,35 +225,21 @@ class Cattles extends CI_Controller {
 	public function getPremiums()
 	{
 		$arry = array();
-		$data =$this->input->post();
+		$inputs =$this->input->post();
 		// sumInsured,animalType,breed,gender,age
-		$arry['message'] = "Sum Insured is mandatory.";
+		$arry['message'] = "Cattle Id is mandatory.";
 		$arry['quotes'] = [];
-		if(!empty($data['sumInsured']))
+		if(!empty($inputs['proposalId']))
 		{	
-			$arry['message'] = "Animal type is mandatory.";
-			if(!empty($data['animalType']))
-			{	
-				$arry['message'] = "Breed is mandatory.";
-				if(!empty($data['breed']))
-				{	
-					$arry['message'] = "Gender is mandatory.";
-					if(!empty($data['gender']))
-					{	
-						$arry['message'] = "Age  is mandatory.";
-						if(!empty($data['age']))
-						{	
-							$arry['message'] = "Something went wrong.";	
-							$result = $this->cattle->getQuotes($data);	
-							if($result)
-							{
-								$arry['status'] = "success";
-								$arry['message'] = "Quotes Retirved successfully.";	
-								$arry['quotes'] = $result;
-							}
-						}
-					}
-				}
+			$arry['message'] = "Something went wrong.";	
+			$data = $this->cattle->getLeadDetailsBypId($inputs['proposalId']);
+			//print_r($data);
+			$result = $this->cattle->getQuotes($data);	
+			if($result)
+			{
+				$arry['status'] = "success";
+				$arry['message'] = "Quotes Retirved successfully.";	
+				$arry['quotes'] = $result;
 			}
 		}
 		echo json_encode($arry);

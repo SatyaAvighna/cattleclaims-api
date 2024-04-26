@@ -13,7 +13,7 @@ Class Cattle extends CI_Model
 		if(!$arry)
 		{
 			$arry= array();
-			$query =  $this->db->query("select cId,cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath from cattles where cId=".$cId);
+			$query =  $this->db->query("select cId,animalType,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath from cattles where cId=".$cId);
 			foreach($query->result() as $row)
 			{
 				foreach($row as $column_name=>$column_value)
@@ -43,7 +43,7 @@ Class Cattle extends CI_Model
 		$status = false;
 		$set = "";
         //cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath,createdBy
-		if(!empty($req['cattle'])) $set .= "cattle=".$this->db->escape($req['cattle']).",";
+		if(!empty($req['animalType'])) $set .= "animalType=".$this->db->escape($req['animalType']).",";
 		if(!empty($req['tagnumber'])) $set .= "tagnumber=".$this->db->escape($req['tagnumber']).",";
 		if(!empty($req['breed'])) $set .= "breed=".$this->db->escape($req['breed']).",";
 		if(!empty($req['gender'])) $set .= "gender=".$this->db->escape($req['gender']).",";
@@ -70,18 +70,38 @@ Class Cattle extends CI_Model
 	}
 	public function insertCattleById($req) 
 	{
-		$status = 0;
+		$plId = $cId = 0;
 		$favexits = $this->db->query("select cId from cattles where tagnumber=".$this->db->escape($req['tagnumber']));
 		if($favexits->num_rows() <= 0)
 		{
-			$query =  $this->db->query("INSERT INTO cattles(cattle,tagnumber,breed,gender,age,sumInsured,createdBy) VALUES (".$this->db->escape($req['cattle']).",".$this->db->escape($req['tagnumber']).",".$this->db->escape($req['breed']).",".$this->db->escape($req['gender']).",".$this->db->escape($req['age']).",".$this->db->escape($req['sumInsured']).",".$req['sId'].")");
+			$query =  $this->db->query("INSERT INTO cattles(animalType,tagnumber,breed,gender,age,sumInsured,ownerId,createdBy) VALUES (".$this->db->escape($req['animalType']).",".$this->db->escape($req['tagnumber']).",".$this->db->escape($req['breed']).",".$this->db->escape($req['gender']).",".$this->db->escape($req['age']).",".$this->db->escape($req['sumInsured']).",".$this->db->escape($req['ownerId']).",".$req['sId'].")");
 			if($this->db->affected_rows()>0)
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_cattles");
-				$status = $this->db->insert_id();
+				$cId =$this->db->insert_id();
 			}
 		}
-		return $status;
+		else
+		{
+			foreach($favexits->result() as $row)
+			{
+				$cId = $row->cId;
+			}	
+		}
+		$plId = $this->insertProposer($cId);
+		return array("proposalId"=>$plId,"cId"=>$cId);
+	}
+	public function insertProposer($cId) 
+	{
+		$plId = 0;
+		$proposalId = time();
+		$query =  $this->db->query("INSERT INTO cattle_has_proposal(cId,proposalId) VALUES (".$this->db->escape($cId).",".$proposalId.")");
+		if($this->db->affected_rows()>0)
+		{
+			$plId = $this->db->insert_id();
+			$this->mc->memcached->delete($this->config->config['cKey']."_cattles");
+		}
+		return $proposalId;
 	}
 	
 	function updateOwnecStatusById($req) 
@@ -104,7 +124,25 @@ Class Cattle extends CI_Model
 		}
 		return $status;
 	}
-	
+	public function getLeadDetailsBypId($proposalId) 
+	{
+		$key = $this->config->config['cKey']."_cattles_by_proposarId_".$proposalId;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query = $this->db->query("select l.*,lhp.cqrId from cattles l, cattle_has_proposal lhp where l.cId=lhp.cId and proposalId=".$proposalId);
+			foreach($query->result() as $row)
+			{
+				foreach($row as $clumn_name=>$clumn_value)
+				{
+					$arry[$clumn_name] = $clumn_value;
+				}
+			}
+			// if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
 	function getQuotes($req) 
 	{
 		$arry= array();
