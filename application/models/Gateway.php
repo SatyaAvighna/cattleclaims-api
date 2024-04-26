@@ -6,14 +6,37 @@ Class Gateway extends CI_Model
 	{ 
 		parent::__construct(); 
 	} 
-	public function getOwnerById($oId) 
+	public function getPgorders() 
 	{	
-		$key = $this->config->config['cKey']."_owner_detail".$oId;
+		$key = $this->config->config['cKey']."_pgorders";
 		$arry = $this->mc->memcached->get($key);
 		if(!$arry)
 		{
 			$arry= array();
-			$query =  $this->db->query("select oId,oName,oMobile,oAadhar,oAddress,oPincode,oDistrict,oState from owners where oId=".$oId);
+			// pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,createdOn,pgStatus
+			$query =  $this->db->query("select pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,pgStatus from pgorders");
+			foreach ($query->result() as $row)
+			{
+				$list= array();
+				foreach($row as $column_name=>$column_value)
+				{
+					$list[$column_name] = $column_value;
+				}
+				$arry[] = $list;
+			}	
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
+	public function getpgorderById($pgoId) 
+	{	
+		$key = $this->config->config['cKey']."_pgorders_detail".$pgoId;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			// pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,createdOn,pgStatus
+			$query =  $this->db->query("select pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,pgStatus from pgorders where pgoId=".$pgoId);
 			foreach($query->result() as $row)
 			{
 				foreach($row as $column_name=>$column_value)
@@ -25,20 +48,40 @@ Class Gateway extends CI_Model
 		}
 		return $arry;
 	}
-	public function deleteOwnerById($req) 
+	public function getpgorderById($orderId) 
+	{	
+		$key = $this->config->config['cKey']."_pgordersbyorderId_detail".$orderId;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			// pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,createdOn,pgStatus
+			$query =  $this->db->query("select pgpgoId,orderId,corderId,coAmount,coreturnUrl,coCurrency,pgStatus from pgorders where orderId=".$orderId);
+			foreach($query->result() as $row)
+			{
+				foreach($row as $column_name=>$column_value)
+				{
+					$arry[$column_name] = $column_value;
+				}
+			}	
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
+	public function deletepgorderById($req) 
 	{
 		$status = false;
-		$query =  $this->db->query("update owners set oStatus=1 where oId = ".$req['oId']);
+		$query =  $this->db->query("update pgorders set pgStatus=1 where pgoId = ".$req['pgoId']);
 		if($this->db->affected_rows()>0)
 		{
-			$this->mc->memcached->delete($this->config->config['cKey']."_owners");
-			$this->mc->memcached->delete($this->config->config['cKey']."_owner_detail".$req['oId']);
+			$this->mc->memcached->delete($this->config->config['cKey']."_pgorders");
+			$this->mc->memcached->delete($this->config->config['cKey']."_pgorder_detail".$req['pgoId']);
 			$status = true;
 		}
 		return $status;
 	}
 	
-	public function updateOwnerById($req) 
+	public function updatepgorderById($req) 
 	{
 		$status = false;
 		$set = "";
@@ -54,49 +97,94 @@ Class Gateway extends CI_Model
 		if(!empty($set))
 		{
 			$setValue = rtrim($set,',');
-			//echo "update owners set ".$setValue." where oId= ".$req['oId'];
-			$query =  $this->db->query("update owners set ".$setValue." where oId= ".$req['oId']);
+			//echo "update pgorders set ".$setValue." where pgoId= ".$req['pgoId'];
+			$query =  $this->db->query("update pgorders set ".$setValue." where pgoId= ".$req['pgoId']);
 			if($this->db->affected_rows()>0)
 			{
-				$this->mc->memcached->delete($this->config->config['cKey']."_owners");
-				$this->mc->memcached->delete($this->config->config['cKey']."_owner_detail".$req['oId']);
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgorders");
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgorder_detail".$req['pgoId']);
 				$status = true;
 			}
 		}
 		return $status;
 	}
-	public function insertOwnerById($req) 
+	public function updatepgorderById($req) 
 	{
-		$status = 0;
-		// print_r($req);
-		$favexits = $this->db->query("select oId from owners where oName=".$this->db->escape($req['oName']));
-		if($favexits->num_rows() <= 0)
+		$status = false;
+		$set = "";
+        // corderId,coAmount,coreturnUrl,coCurrency
+		if(!empty($req['corderId'])) $set .= "corderId=".$this->db->escape($req['corderId']).",";
+		if(!empty($req['coAmount'])) $set .= "coAmount=".$this->db->escape($req['coAmount']).",";
+		if(!empty($req['coreturnUrl'])) $set .= "coreturnUrl=".$this->db->escape($req['coreturnUrl']).",";
+		if(!empty($req['coCurrency'])) $set .= "coCurrency=".$this->db->escape($req['coCurrency']).",";
+		if(!empty($set))
 		{
-			$query =  $this->db->query("INSERT INTO owners(oName,oMobile,oAadhar,oAddress,oPincode,oDistrict,oState,createdBy) VALUES (".$this->db->escape($req['oName']).",".$this->db->escape($req['oMobile']).",".$this->db->escape($req['oAadhar']).",".$this->db->escape($req['oAddress']).",".$this->db->escape($req['oPincode']).",".$this->db->escape($req['oDistrict']).",".$this->db->escape($req['oState']).",".$req['sId'].")");
+			$setValue = rtrim($set,',');
+			//echo "update pgorders set ".$setValue." where pgoId= ".$req['pgoId'];
+			$query =  $this->db->query("update pgorders set ".$setValue." where orderId= ".$req['orderId']);
 			if($this->db->affected_rows()>0)
 			{
-				$this->mc->memcached->delete($this->config->config['cKey']."_owners");
-				$status = $this->db->insert_id();
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgorders");
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgorder_detail".$req['pgoId']);				
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgordersbyorderId_detail".$req['orderId']);
+				$status = true;
 			}
 		}
 		return $status;
 	}
+	public function insertpgorderById($req) 
+	{
+		$pgpgoId = 0;
+		// print_r($req);
+		$favexits = $this->db->query("select pgoId from pgorders where oName=".$this->db->escape($req['oName']));
+		if($favexits->num_rows() <= 0)
+		{
+			$query =  $this->db->query("INSERT INTO pgorders(orderId,corderId,coAmount,coreturnUrl,coCurrency) VALUES (".$this->db->escape($req['orderId']).",".$this->db->escape($req['corderId']).",".$this->db->escape($req['coAmount']).",".$this->db->escape($req['coreturnUrl']).",".$this->db->escape($req['coCurrency']).")");
+			if($this->db->affected_rows()>0)
+			{
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgorders");
+				$pgpgoId = $data['orderId'];
+			}
+		}
+		return $pgpgoId;
+	}
 	
-	function updateOwneoStatusById($req) 
+	function updatepgStatusById($req) 
 	{
 		$status = false;
 		$set = "";
 		//cName cPerson cemailId cDesignation cMobile cAddress cPath
-		if(!empty($req['oStatus'])) $set .= "oStatus=".$req['oStatus'].",";
+		if(!empty($req['pgStatus'])) $set .= "pgStatus=".$req['pgStatus'].",";
 		
 		if(!empty($set))
 		{
 			$setValue = rtrim($set,',');
-			$query =  $this->db->query("update owners set ".$setValue." where oId = ".$req['oId']);
+			$query =  $this->db->query("update pgorders set ".$setValue." where pgoId = ".$req['pgoId']);
 			if($this->db->affected_rows()>0)
 			{
-				$this->mc->memcached->delete($this->config->config['cKey']."_owners");
-				$this->mc->memcached->delete($this->config->config['cKey']."_owner_detail".$req['oId']);
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgorders");
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgorder_detail".$req['pgoId']);
+				$status = true;
+			}
+		}
+		return $status;
+	}
+	function updatepgStatusByorderId($req) 
+	{
+		$status = false;
+		$set = "";
+		//cName cPerson cemailId cDesignation cMobile cAddress cPath
+		if(!empty($req['pgStatus'])) $set .= "pgStatus=".$req['pgStatus'].",";
+		
+		if(!empty($set))
+		{
+			$setValue = rtrim($set,',');
+			$query =  $this->db->query("update pgorders set ".$setValue." where orderId = ".$req['orderId']);
+			if($this->db->affected_rows()>0)
+			{
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgorders");
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgorder_detail".$req['pgoId']);
+				$this->mc->memcached->delete($this->config->config['cKey']."_pgordersbyorderId_detail".$req['orderId']);
 				$status = true;
 			}
 		}
