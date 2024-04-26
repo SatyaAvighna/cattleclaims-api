@@ -48,7 +48,7 @@ Class Gateway extends CI_Model
 		}
 		return $arry;
 	}
-	public function getpgorderById($orderId) 
+	public function getpgorderByorderId($orderId) 
 	{	
 		$key = $this->config->config['cKey']."_pgordersbyorderId_detail".$orderId;
 		$arry = $this->mc->memcached->get($key);
@@ -108,7 +108,7 @@ Class Gateway extends CI_Model
 		}
 		return $status;
 	}
-	public function updatepgorderById($req) 
+	public function updatepgorderByorderId($req) 
 	{
 		$status = false;
 		$set = "";
