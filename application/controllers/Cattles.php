@@ -232,7 +232,7 @@ class Cattles extends CI_Controller {
 		if(!empty($inputs['proposalId']))
 		{	
 			$arry['message'] = "Something went wrong.";	
-			$data = $this->cattle->getLeadDetailsBypId($inputs['proposalId']);
+			$data = $this->cattle->getCattleDetailsBypId($inputs['proposalId']);
 			//print_r($data);
 			$result = $this->cattle->getQuotes($data);	
 			if($result)
@@ -280,6 +280,62 @@ class Cattles extends CI_Controller {
 				$arry['status'] = "success";
 				$arry['message'] = "Medicalqns Retirved successfully.";	
 				$arry['medicalqns'] = $result;
+			}
+		}
+		echo json_encode($arry);
+	}
+	public function updatemedicalqns()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$data = $this->input->post();
+		$arry['message'] = "Proposal Id is mandatory.";
+		// $data['proposalId'] = base64_decode($data['proposalId']);
+		if(!empty($data['proposalId']))
+		{	
+			$qnss = json_decode($data['qns']);
+			foreach($qnss as $qns)
+			{
+				$input = array();
+				$input['proposalId'] = $data['proposalId'];
+				foreach($qns as $key=>$val)
+				{
+					$input[$key] = $val;
+				}
+				$result = $this->cattle->insertCattleMedicalQns($input);
+				if($result)
+				{
+					$arry['status'] = "success";
+					$arry['message'] = "Data Updated successfully.";
+				}
+			}
+		}
+		echo json_encode($arry);
+	}
+	public function updatevdmedicalqns()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$data = $this->input->post();
+		$arry['message'] = "Proposal Id is mandatory.";
+		// $data['proposalId'] = base64_decode($data['proposalId']);
+		if(!empty($data['proposalId']))
+		{	
+			$qnss = json_decode($data['qns']);
+			foreach($qnss as $qns)
+			{
+				$input = array();
+				$input['proposalId'] = $data['proposalId'];
+				foreach($qns as $key=>$val)
+				{
+					$input[$key] = $val;
+				}
+				$result = $this->cattle->insertCattleVdMedicalQns($input);
+				if($result)
+				{
+					$arry['status'] = "success";
+					$arry['message'] = "Data Updated successfully.";
+				}
 			}
 		}
 		echo json_encode($arry);

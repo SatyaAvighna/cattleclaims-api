@@ -86,13 +86,13 @@ class Paymentgateway extends CI_Controller {
 	public function encryptValue($data)
 	{
 		$merchant_data='';
-		$working_key = CCA_WORKING_KEY;
-		$access_code = CCA_ACCESS_CODE;
-		
+		// $working_key = CCA_WORKING_KEY;
+		// $access_code = CCA_ACCESS_CODE;
+		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
 		foreach ($data as $key => $value){
 			$merchant_data.=$key.'='.$value.'&';
 		}
-		// $merchant_data .= "order_id=".$orderId;
+		$encval = $this->encryption->encrypt($merchant_data);
 		return $encval;
 	}
 	public function successpayment()

@@ -124,7 +124,7 @@ Class Cattle extends CI_Model
 		}
 		return $status;
 	}
-	public function getLeadDetailsBypId($proposalId) 
+	public function getCattleDetailsBypId($proposalId) 
 	{
 		$key = $this->config->config['cKey']."_cattles_by_proposarId_".$proposalId;
 		$arry = $this->mc->memcached->get($key);
@@ -194,6 +194,138 @@ Class Cattle extends CI_Model
 					$arry[$column_name] = $column_value;
 				}
 			}	
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
+	function insertCattleMedicalQns($req) 
+	{
+		$chmqId = 0;
+		$proposalId = $req['proposalId'];
+		$favexits = $this->db->query("select chmqId from cattle_has_medicalquestions where proposalId=".$this->db->escape($req['proposalId'])." and mqId=".$this->db->escape($req['mqId'])."");
+		// echo "select chmqId from cattle_has_medicalquestions where proposalId=".$this->db->escape($req['proposalId'])." and chmId=".$this->db->escape($req['chmId'])." and mqId=".$this->db->escape($req['mqId'])."<br/>";
+		if($favexits->num_rows() <= 0)
+		{
+			// echo $favexits->num_rows();
+			// echo "<br/>";
+			$query =  $this->db->query("INSERT INTO cattle_has_medicalquestions(proposalId,mqId,ans,questionSetCode,questionCode) VALUES (".$this->db->escape($req['proposalId']).",".$this->db->escape($req['mqId']).",".$this->db->escape($req['ans']).",".$this->db->escape($req['questionSetCode']).",".$this->db->escape($req['questionCode']).")");
+			if($this->db->affected_rows()>0)
+			{
+				$chmqId = $this->db->insert_id();
+				$this->mc->memcached->delete($this->config->config['cKey']."_cattles");
+				$this->mc->memcached->delete($this->config->config['cKey']."_cattles_by_proposarId_".$proposalId);
+				$this->mc->memcached->delete($this->config->config['cKey']."_cattlemqns_by_proposarId_".$proposalId);
+				$this->mc->memcached->delete($this->config->config['cKey']."_cattlemembers_by_proposarId_".$proposalId);
+			}
+		}
+		else
+		{
+			$set = "";
+			if(!empty($req["mqId"])) $set .= "mqId=".$this->db->escape($req["mqId"]).",";
+			if(!empty($req["ans"])) $set .= "ans=".$this->db->escape($req["ans"]).",";
+			if(!empty($req["questionSetCode"])) $set .= "questionSetCode=".$this->db->escape($req["questionSetCode"]).",";
+			if(!empty($req["questionCode"])) $set .= "questionCode=".$this->db->escape($req["questionCode"]).",";
+			if(!empty($set))
+			{
+				foreach($favexits->result() as $row)
+				{
+					$chmqId = $row->chmqId;
+				}
+				$setValue = rtrim($set,',');
+				$query =  $this->db->query("update cattle_has_medicalquestions set ".$setValue." where chmqId = ".$chmqId);
+				if($this->db->affected_rows()>0)
+				{
+					$this->mc->memcached->delete($this->config->config['cKey']."_cattles");
+					$this->mc->memcached->delete($this->config->config['cKey']."_cattles_by_proposarId_".$proposalId);
+					$this->mc->memcached->delete($this->config->config['cKey']."_cattlemembers_by_proposarId_".$proposalId);
+					$this->mc->memcached->delete($this->config->config['cKey']."_cattlemqns_by_proposarId_".$proposalId);
+				}
+			}
+		}
+		return $chmqId;
+	}
+	function getMedicalQnsBypId($proposalId) 
+	{
+		$key = $this->config->config['cKey']."_cattlemqns_by_proposarId_".$proposalId;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query = $this->db->query("select * from cattle_has_medicalquestions lhm where lhm.proposalId=".$proposalId);
+			foreach($query->result() as $row)
+			{
+				$list= array();
+                foreach($row as $column_name=>$column_value)
+				{
+					$list[$column_name] = $column_value;
+				}
+                $arry[] = $list;
+			}
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
+	function insertCattleVdMedicalQns($req) 
+	{
+		$chmqvId = 0;
+		$proposalId = $req['proposalId'];
+		$favexits = $this->db->query("select chmqvId from cattle_has_vdquestions where proposalId=".$this->db->escape($req['proposalId'])." and aqId=".$this->db->escape($req['aqId'])."");
+		// echo "select chmqId from cattle_has_medicalquestions where proposalId=".$this->db->escape($req['proposalId'])." and chmId=".$this->db->escape($req['chmId'])." and mqId=".$this->db->escape($req['mqId'])."<br/>";
+		if($favexits->num_rows() <= 0)
+		{
+			// echo $favexits->num_rows();
+			// echo "<br/>";
+			$query =  $this->db->query("INSERT INTO cattle_has_vdquestions(proposalId,aqId,ans,questionSetCode,questionCode) VALUES (".$this->db->escape($req['proposalId']).",".$this->db->escape($req['aqId']).",".$this->db->escape($req['ans']).",".$this->db->escape($req['questionSetCode']).",".$this->db->escape($req['questionCode']).")");
+			if($this->db->affected_rows()>0)
+			{
+				$chmqvId = $this->db->insert_id();
+				$this->mc->memcached->delete($this->config->config['cKey']."_cattles");
+				$this->mc->memcached->delete($this->config->config['cKey']."_cattles_by_proposarId_".$proposalId);
+				$this->mc->memcached->delete($this->config->config['cKey']."_cattlevdmqns_by_proposarId_".$proposalId);
+			}
+		}
+		else
+		{
+			$set = "";
+			if(!empty($req["aqId"])) $set .= "aqId=".$this->db->escape($req["aqId"]).",";
+			if(!empty($req["ans"])) $set .= "ans=".$this->db->escape($req["ans"]).",";
+			if(!empty($req["questionSetCode"])) $set .= "questionSetCode=".$this->db->escape($req["questionSetCode"]).",";
+			if(!empty($req["questionCode"])) $set .= "questionCode=".$this->db->escape($req["questionCode"]).",";
+			if(!empty($set))
+			{
+				foreach($favexits->result() as $row)
+				{
+					$chmqvId = $row->chmqvId;
+				}
+				$setValue = rtrim($set,',');
+				$query =  $this->db->query("update cattle_has_vdquestions set ".$setValue." where chmqvId = ".$chmqvId);
+				if($this->db->affected_rows()>0)
+				{
+					$this->mc->memcached->delete($this->config->config['cKey']."_cattles");
+					$this->mc->memcached->delete($this->config->config['cKey']."_cattles_by_proposarId_".$proposalId);
+					$this->mc->memcached->delete($this->config->config['cKey']."_cattlevdmqns_by_proposarId_".$proposalId);
+				}
+			}
+		}
+		return $chmqvId;
+	}
+	function getVdMedicalQnsBypId($proposalId) 
+	{
+		$key = $this->config->config['cKey']."_cattlevdmqns_by_proposarId_".$proposalId;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query = $this->db->query("select * from cattle_has_vdquestions lhm where lhm.proposalId=".$proposalId);
+			foreach($query->result() as $row)
+			{
+				$list= array();
+                foreach($row as $column_name=>$column_value)
+				{
+					$list[$column_name] = $column_value;
+				}
+                $arry[] = $list;
+			}
 			if($arry)$this->mc->memcached->save($key,$arry,0,0);
 		}
 		return $arry;
