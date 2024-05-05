@@ -132,6 +132,7 @@ Class Cattle extends CI_Model
 		{
 			$arry= array();
 			$query = $this->db->query("select l.*,lhp.cqrId from cattles l, cattle_has_proposal lhp where l.cId=lhp.cId and proposalId=".$proposalId);
+			// echo "select l.*,lhp.cqrId from cattles l, cattle_has_proposal lhp where l.cId=lhp.cId and proposalId=".$proposalId;
 			foreach($query->result() as $row)
 			{
 				foreach($row as $clumn_name=>$clumn_value)

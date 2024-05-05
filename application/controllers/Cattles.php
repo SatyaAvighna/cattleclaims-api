@@ -233,7 +233,7 @@ class Cattles extends CI_Controller {
 		{	
 			$arry['message'] = "Something went wrong.";	
 			$data = $this->cattle->getCattleDetailsBypId($inputs['proposalId']);
-			//print_r($data);
+			print_r($data);
 			$result = $this->cattle->getQuotes($data);	
 			if($result)
 			{
