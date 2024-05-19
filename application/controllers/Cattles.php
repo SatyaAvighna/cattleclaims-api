@@ -147,10 +147,15 @@ class Cattles extends CI_Controller {
 	{
 		$arry = array();
 		$arry['status'] = "error";
-		$arry['message'] = "Id is mandatory.";
+		$arry['message'] = "Cattle Id is mandatory.";
+		$arry['earTag'] = "";
+		$arry['lSidePath'] = "";
+		$arry['rSidePath'] = "";
+		$arry['vPath'] = "";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
 		// $data['sId'] =  $this->encryption->decrypt($data['uId']);
+		// print_r($data);
 		if(!empty($data['cId']))
 		{
             // cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath
@@ -160,10 +165,10 @@ class Cattles extends CI_Controller {
             $data['vPath'] = "";
             if(!empty($_FILES)) 
             {
-                $data['earTag'] = $this->uploadfiles($_FILES,"earTag");
-                $data['lSidePath'] = $this->uploadfiles($_FILES,"lSidePath");
-                $data['rSidePath'] = $this->uploadfiles($_FILES,"rSidePath");
-                $data['vPath'] = $this->uploadfiles($_FILES,"vPath");
+                if(isset($_FILES['earTag'])) $data['earTag'] = $this->uploadfiles($_FILES,"earTag",$data['cId']);
+                if(isset($_FILES['lSidePath'])) $data['lSidePath'] = $this->uploadfiles($_FILES,"lSidePath",$data['cId']);
+                if(isset($_FILES['rSidePath'])) $data['rSidePath'] = $this->uploadfiles($_FILES,"rSidePath",$data['cId']);
+                if(isset($_FILES['vPath'])) $data['vPath'] = $this->uploadfiles($_FILES,"vPath",$data['cId']);
             }
             $arry['message'] = "Something went wrong.";
             $result = $this->cattle->updateCattleById($data);	
@@ -171,6 +176,10 @@ class Cattles extends CI_Controller {
             {
                 $arry['status'] = "success";
                 $arry['message'] = "Cattle updated successfully.";	
+				$arry['earTag'] = $data['earTag'];
+				$arry['lSidePath'] = $data['lSidePath'];
+				$arry['rSidePath'] = $data['rSidePath'];
+				$arry['vPath'] = $data['vPath'];
             }
 		}
 		echo json_encode($arry);
@@ -222,6 +231,26 @@ class Cattles extends CI_Controller {
 		}
 		echo json_encode($arry);
 	}
+	public function uploadfiles($files,$fname,$cId)
+	{
+		$lPath = '';
+        if(is_uploaded_file($files[$fname]['tmp_name']))
+        {
+            $sourcePath = $files[$fname]['tmp_name'];
+            $path_parts = pathinfo($files[$fname]['name']);
+            $lPath = "uploads/cattles";
+            if(!file_exists($lPath)) mkdir($lPath, 0777);
+			$lPath = "uploads/cattles/".$cId;
+            if(!file_exists($lPath)) mkdir($lPath, 0777);
+            $lPath .= "/".$files[$fname]['name'];
+            $targetPath = './'.$lPath;
+            if(move_uploaded_file($sourcePath,$targetPath))
+            {
+                // pass;
+            }
+        }
+		return $lPath;
+	}
 	public function getPremiums()
 	{
 		$arry = array();
@@ -233,7 +262,7 @@ class Cattles extends CI_Controller {
 		{	
 			$arry['message'] = "Something went wrong.";	
 			$data = $this->cattle->getCattleDetailsBypId($inputs['proposalId']);
-			print_r($data);
+			// print_r($data);
 			$result = $this->cattle->getQuotes($data);	
 			if($result)
 			{
