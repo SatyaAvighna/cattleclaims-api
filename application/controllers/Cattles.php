@@ -299,8 +299,8 @@ class Cattles extends CI_Controller {
 		$arry = array();
 		$data =$this->input->post();
 		// sumInsured,animalType,breed,gender,age
-		$arry['message'] = "Base Procuct Id is mandatory.";
-		$arry['list'] = [];
+		$arry['message'] = "Something went wrong.";	
+		$arry['list'] = array();
 		$result = $this->cattle->getSuminsureds();	
 		if($result)
 		{
