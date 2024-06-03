@@ -331,5 +331,26 @@ Class Cattle extends CI_Model
 		}
 		return $arry;
 	}
+	function getSuminsureds() 
+	{
+		$key = $this->config->config['cKey']."_suminsureds_";
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query = $this->db->query("select siName from suminsureds");
+			foreach($query->result() as $row)
+			{
+				// $list= array();
+                foreach($row as $column_name=>$column_value)
+				{
+					$arry[$column_name] = $column_value;
+				}
+                // $arry[] = $list;
+			}
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
 } 
 ?> 

@@ -294,6 +294,22 @@ class Cattles extends CI_Controller {
 		}
 		echo json_encode($arry);
 	}
+	public function getSuminsureds()
+	{
+		$arry = array();
+		$data =$this->input->post();
+		// sumInsured,animalType,breed,gender,age
+		$arry['message'] = "Base Procuct Id is mandatory.";
+		$arry['list'] = [];
+		$result = $this->cattle->getSuminsureds();	
+		if($result)
+		{
+			$arry['status'] = "success";
+			$arry['message'] = "Suminsured Retirved successfully.";	
+			$arry['list'] = $result;
+		}
+		echo json_encode($arry);
+	}
 	public function getAnmlAddlqns()
 	{
 		$arry = array();
