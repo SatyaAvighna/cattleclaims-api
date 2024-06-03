@@ -164,7 +164,7 @@ class Paymentgateway extends CI_Controller {
 								$session = OrderSession::create($params, $requestOption);
 								if ($session->status == "NEW") {
 									// $response = array("orderId" => $session->orderId, "id" => $session->id, "status" => "success", "paymentLinks" =>  $session->paymentLinks->web, "sdkPayload" => $session->sdkPayload );
-									$response = array("orderId" => $session->orderId, "status" => "success", "paymentLink" =>  $session->paymentLinks['web']);
+									$response = array("orderId" => $session->orderId, "status" => "success", "paymentLink" =>  $session->paymentLinks['web'],"sdkPayload" => $session->sdkPayload);
 								} else {
 									http_response_code(500);
 									$response = array("message" => "session status: " . $session->status);

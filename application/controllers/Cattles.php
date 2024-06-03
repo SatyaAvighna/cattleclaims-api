@@ -148,14 +148,15 @@ class Cattles extends CI_Controller {
 		$arry = array();
 		$arry['status'] = "error";
 		$arry['message'] = "Cattle Id is mandatory.";
-		$arry['earTag'] = "";
-		$arry['lSidePath'] = "";
-		$arry['rSidePath'] = "";
-		$arry['vPath'] = "";
+		// $arry['earTag'] = "";
+		// $arry['lSidePath'] = "";
+		// $arry['rSidePath'] = "";
+		// $arry['vPath'] = "";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
 		// $data['sId'] =  $this->encryption->decrypt($data['uId']);
 		// print_r($data);
+		// print_r($_FILES);
 		if(!empty($data['cId']))
 		{
             // cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath
@@ -176,10 +177,10 @@ class Cattles extends CI_Controller {
             {
                 $arry['status'] = "success";
                 $arry['message'] = "Cattle updated successfully.";	
-				$arry['earTag'] = $data['earTag'];
-				$arry['lSidePath'] = $data['lSidePath'];
-				$arry['rSidePath'] = $data['rSidePath'];
-				$arry['vPath'] = $data['vPath'];
+				if(isset($_FILES['earTag'])) $arry['earTag'] = $data['earTag'];
+				if(isset($_FILES['lSidePath'])) $arry['lSidePath'] = $data['lSidePath'];
+				if(isset($_FILES['rSidePath'])) $arry['rSidePath'] = $data['rSidePath'];
+				if(isset($_FILES['vPath'])) $arry['vPath'] = $data['vPath'];
             }
 		}
 		echo json_encode($arry);
