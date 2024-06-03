@@ -1,0 +1,7 @@
+success - response
+
+{"status":"success","message":"Order created successfully.","orderId":"CAP1717307360","paymentLink":"https:\/\/smartgatewayuat.hdfcbank.com\/payment-page\/order\/ordeh_5e8ee0bb40c942219d2df85e9787ec2f"}
+
+
+Failure - Response
+{"status":"error","message":"Order Id already exists.","pgoId":0}

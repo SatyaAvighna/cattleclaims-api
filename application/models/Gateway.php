@@ -136,14 +136,14 @@ Class Gateway extends CI_Model
 	{
 		$pgpgoId = 0;
 		// print_r($req);
-		$favexits = $this->db->query("select pgoId from pgorders where oName=".$this->db->escape($req['oName']));
+		$favexits = $this->db->query("select pgoId from pgorders where corderId=".$this->db->escape($req['corderId']));
 		if($favexits->num_rows() <= 0)
 		{
 			$query =  $this->db->query("INSERT INTO pgorders(orderId,corderId,coAmount,coreturnUrl,coCurrency) VALUES (".$this->db->escape($req['orderId']).",".$this->db->escape($req['corderId']).",".$this->db->escape($req['coAmount']).",".$this->db->escape($req['coreturnUrl']).",".$this->db->escape($req['coCurrency']).")");
 			if($this->db->affected_rows()>0)
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_pgorders");
-				$pgpgoId = $data['orderId'];
+				$pgpgoId = $req['orderId'];
 			}
 		}
 		return $pgpgoId;
