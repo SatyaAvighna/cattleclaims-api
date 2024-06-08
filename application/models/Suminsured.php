@@ -8,12 +8,12 @@ Class suminsured extends CI_Model
 	} 
 	public function getsuminsuredById($req) 
 	{
-		$key = $this->config->config['cKey']."_suminsured_detail".$req['suminsured_Id'];
+		$key = $this->config->config['cKey']."_suminsured_detail".$req['siId'];
 		$arry = $this->mc->memcached->get($key);
 		if(!$arry)
 		{
 			$arry= array();
-			$query = $this->db->query("select * from suminsured where suminsured_Id=".$req['suminsured_Id']);
+			$query = $this->db->query("select * from suminsureds where siId=".$req['siId']);
 			foreach($query->result() as $row)
 			{
 				foreach($row as $clumn_name=>$clumn_value)
@@ -28,11 +28,11 @@ Class suminsured extends CI_Model
 	public function deletesuminsuredById($req) 
 	{
 		$status = false;
-		$query =  $this->db->query("delete from suminsured where suminsured_Id = ".$req['suminsured_Id']);
+		$query =  $this->db->query("delete from suminsureds where siId = ".$req['siId']);
 		if($this->db->affected_rows()>0)
 		{
-			$this->mc->memcached->delete($this->config->config['cKey']."_suminsured");
-			$this->mc->memcached->delete($this->config->config['cKey']."_suminsured_detail".$req['suminsured_Id']);
+			$this->mc->memcached->delete($this->config->config['cKey']."_suminsureds");
+			$this->mc->memcached->delete($this->config->config['cKey']."_suminsured_detail".$req['siId']);
 			$status = true;
 		}
 		return $status;
@@ -43,16 +43,17 @@ Class suminsured extends CI_Model
 		$status = false;
 		$set = "";
 		//Default_MName,price,staffId,tax,code,color,vendorType,priority
-		if(!empty($req["baseproductid"])) $set .= "baseproductid=".$this->db->escape($req["baseproductid"]).",";if(!empty($req["sumisnured"])) $set .= "sumisnured=".$this->db->escape($req["sumisnured"]).",";if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
+		if(!empty($req["sumisnured"])) $set .= "siName=".$this->db->escape($req["siName"]).",";
+		// if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
 		
 		if(!empty($set))
 		{
 			$setValue = rtrim($set,',');
-			$query =  $this->db->query("update suminsured set ".$setValue." where suminsured_Id = ".$req['suminsured_Id']);
+			$query =  $this->db->query("update suminsureds set ".$setValue." where siId = ".$req['siId']);
 			if($this->db->affected_rows()>0)
 			{
-				$this->mc->memcached->delete($this->config->config['cKey']."_suminsured");
-				$this->mc->memcached->delete($this->config->config['cKey']."_suminsured_detail".$req['suminsured_Id']);
+				$this->mc->memcached->delete($this->config->config['cKey']."_suminsureds");
+				$this->mc->memcached->delete($this->config->config['cKey']."_suminsured_detail".$req['siId']);
 				$status = true;
 			}
 		}
@@ -62,23 +63,23 @@ Class suminsured extends CI_Model
 	public function insertsuminsuredById($req) 
 	{
 		$status = false;
-		$query =  $this->db->query("INSERT INTO suminsured(baseproductid,sumisnured,createdBy) VALUES (".$this->db->escape($req["baseproductid"]).",".$this->db->escape($req["sumisnured"]).",".$this->db->escape($req["sId"]).")");
+		$query =  $this->db->query("INSERT INTO suminsureds(siName) VALUES (".$this->db->escape($req["siName"]).")");
 		if($this->db->affected_rows()>0)
 		{
 			//echo "i";
-			$this->mc->memcached->delete($this->config->config['cKey']."_suminsured");
+			$this->mc->memcached->delete($this->config->config['cKey']."_suminsureds");
 			$status = true;
 		}
 		return $status;
 	}
 	public function getsuminsureds() 
 	{
-		$key = $this->config->config['cKey']."_suminsured";
+		$key = $this->config->config['cKey']."_suminsureds";
 		$arry = $this->mc->memcached->get($key);
 		if(!$arry)
 		{
 			$arry= array();
-			$query = $this->db->query("select * from suminsured");
+			$query = $this->db->query("select * from suminsureds");
 			foreach($query->result() as $row)
 			{
 				$list= array();
