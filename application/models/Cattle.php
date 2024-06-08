@@ -333,7 +333,7 @@ Class Cattle extends CI_Model
 	}
 	function getSuminsureds() 
 	{
-		$key = $this->config->config['cKey']."_suminsureds_";
+		$key = $this->config->config['cKey']."_suminsureds";
 		$arry = $this->mc->memcached->get($key);
 		if(!$arry)
 		{

@@ -56,7 +56,7 @@ class C_suminsured extends CI_Controller {
 		$arry['status'] = "error";
 		$data =$this->input->post();
 		$arry['message'] = "Id is mandatory.";
-		if(!empty($data['suminsured_Id']))
+		if(!empty($data['siId']))
 		{
 			$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
 			$data['sId'] =  $this->encryption->decrypt($data['sId']);
@@ -73,7 +73,7 @@ class C_suminsured extends CI_Controller {
 		$arry['status'] = "error";
 		$data =$this->input->post();
 		$arry['message'] = "Id is mandatory.";
-		if(!empty($data['suminsured_Id']))
+		if(!empty($data['siId']))
 		{
 			$arry['message'] = "Something went wrong.";	
 			$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
@@ -93,7 +93,7 @@ class C_suminsured extends CI_Controller {
 		$arry['status'] = "error";
 		$data =$this->input->post();
 		$arry['message'] = "Id is mandatory.";
-		if(!empty($data['suminsured_Id']))
+		if(!empty($data['siId']))
 		{
 			$arry['message'] = "Something went wrong.";	
 			$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));

@@ -43,7 +43,7 @@ Class suminsured extends CI_Model
 		$status = false;
 		$set = "";
 		//Default_MName,price,staffId,tax,code,color,vendorType,priority
-		if(!empty($req["sumisnured"])) $set .= "siName=".$this->db->escape($req["siName"]).",";
+		if(!empty($req["siName"])) $set .= "siName=".$this->db->escape($req["siName"]).",";
 		// if(!empty($req["sId"])) $set .= "updatedBy=".$this->db->escape($req["sId"]).",";;
 		
 		if(!empty($set))
