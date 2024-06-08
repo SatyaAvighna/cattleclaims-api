@@ -69,15 +69,21 @@ Class Owner extends CI_Model
 	{
 		$status = 0;
 		// print_r($req);
-		$favexits = $this->db->query("select oId from owners where oName=".$this->db->escape($req['oName']));
-		if($favexits->num_rows() <= 0)
+		// $favexits = $this->db->query("select oId from owners where oName=".$this->db->escape($req['oName']));
+		// if($favexits->num_rows() <= 0)
+		// {
+		// 	$query =  $this->db->query("INSERT INTO owners(oName,oMobile,oAadhar,oAddress,oPincode,oDistrict,oState,createdBy) VALUES (".$this->db->escape($req['oName']).",".$this->db->escape($req['oMobile']).",".$this->db->escape($req['oAadhar']).",".$this->db->escape($req['oAddress']).",".$this->db->escape($req['oPincode']).",".$this->db->escape($req['oDistrict']).",".$this->db->escape($req['oState']).",".$req['sId'].")");
+		// 	if($this->db->affected_rows()>0)
+		// 	{
+		// 		$this->mc->memcached->delete($this->config->config['cKey']."_owners");
+		// 		$status = $this->db->insert_id();
+		// 	}
+		// }
+		$query =  $this->db->query("INSERT INTO owners(oName,oMobile,oAadhar,oAddress,oPincode,oDistrict,oState,createdBy) VALUES (".$this->db->escape($req['oName']).",".$this->db->escape($req['oMobile']).",".$this->db->escape($req['oAadhar']).",".$this->db->escape($req['oAddress']).",".$this->db->escape($req['oPincode']).",".$this->db->escape($req['oDistrict']).",".$this->db->escape($req['oState']).",".$req['sId'].")");
+		if($this->db->affected_rows()>0)
 		{
-			$query =  $this->db->query("INSERT INTO owners(oName,oMobile,oAadhar,oAddress,oPincode,oDistrict,oState,createdBy) VALUES (".$this->db->escape($req['oName']).",".$this->db->escape($req['oMobile']).",".$this->db->escape($req['oAadhar']).",".$this->db->escape($req['oAddress']).",".$this->db->escape($req['oPincode']).",".$this->db->escape($req['oDistrict']).",".$this->db->escape($req['oState']).",".$req['sId'].")");
-			if($this->db->affected_rows()>0)
-			{
-				$this->mc->memcached->delete($this->config->config['cKey']."_owners");
-				$status = $this->db->insert_id();
-			}
+			$this->mc->memcached->delete($this->config->config['cKey']."_owners");
+			$status = $this->db->insert_id();
 		}
 		return $status;
 	}

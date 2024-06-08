@@ -243,7 +243,7 @@ class Cattles extends CI_Controller {
             if(!file_exists($lPath)) mkdir($lPath, 0777);
 			$lPath = "uploads/cattles/".$cId;
             if(!file_exists($lPath)) mkdir($lPath, 0777);
-            $lPath .= "/".$files[$fname]['name'];
+            $lPath .= "/".time()."_".$files[$fname]['name'];
             $targetPath = './'.$lPath;
             if(move_uploaded_file($sourcePath,$targetPath))
             {
