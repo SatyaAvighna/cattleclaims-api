@@ -42,7 +42,7 @@ Class Cattle extends CI_Model
 	{
 		$status = false;
 		$set = "";
-        //cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath,createdBy
+        //cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath,createdBy, cAddress, cPincode, cDistrict, cState
 		if(!empty($req['animalType'])) $set .= "animalType=".$this->db->escape($req['animalType']).",";
 		if(!empty($req['tagnumber'])) $set .= "tagnumber=".$this->db->escape($req['tagnumber']).",";
 		if(!empty($req['breed'])) $set .= "breed=".$this->db->escape($req['breed']).",";
@@ -53,6 +53,10 @@ Class Cattle extends CI_Model
 		if(!empty($req['lSidePath'])) $set .= "lSidePath=".$this->db->escape($req['lSidePath']).",";
 		if(!empty($req['rSidePath'])) $set .= "rSidePath=".$this->db->escape($req['rSidePath']).",";
 		if(!empty($req['vPath'])) $set .= "vPath=".$this->db->escape($req['vPath']).",";
+		if(!empty($req['cAddress'])) $set .= "cAddress=".$this->db->escape($req['cAddress']).",";
+		if(!empty($req['cPincode'])) $set .= "cPincode=".$this->db->escape($req['cPincode']).",";
+		if(!empty($req['cDistrict'])) $set .= "cDistrict=".$this->db->escape($req['cDistrict']).",";
+		if(!empty($req['cState'])) $set .= "cState=".$this->db->escape($req['cState']).",";
 		// if(!empty($req['updatedBy'])) $set .= "updatedBy=".$this->db->escape($req['sId']).",";s
 		if(!empty($set))
 		{
@@ -74,7 +78,7 @@ Class Cattle extends CI_Model
 		$favexits = $this->db->query("select cId from cattles where tagnumber=".$this->db->escape($req['tagnumber']));
 		if($favexits->num_rows() <= 0)
 		{
-			$query =  $this->db->query("INSERT INTO cattles(animalType,tagnumber,breed,gender,age,sumInsured,ownerId,createdBy) VALUES (".$this->db->escape($req['animalType']).",".$this->db->escape($req['tagnumber']).",".$this->db->escape($req['breed']).",".$this->db->escape($req['gender']).",".$this->db->escape($req['age']).",".$this->db->escape($req['sumInsured']).",".$this->db->escape($req['ownerId']).",".$req['sId'].")");
+			$query =  $this->db->query("INSERT INTO cattles(animalType,tagnumber,breed,gender,age,sumInsured,ownerId,cAddress, cPincode, cDistrict, cState,createdBy) VALUES (".$this->db->escape($req['animalType']).",".$this->db->escape($req['tagnumber']).",".$this->db->escape($req['breed']).",".$this->db->escape($req['gender']).",".$this->db->escape($req['age']).",".$this->db->escape($req['sumInsured']).",".$this->db->escape($req['ownerId']).",".$this->db->escape($req['cAddress']).",".$this->db->escape($req['cPincode']).",".$this->db->escape($req['cDistrict']).",".$this->db->escape($req['cState']).",".$req['sId'].")");
 			if($this->db->affected_rows()>0)
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_cattles");
@@ -171,10 +175,12 @@ Class Cattle extends CI_Model
 			// echo "select medicalquestions_Id,productId,qnSetCode,qnCode,qnDescription,qnType,defaultValue,isKnockoutQn,acceptedResponses,knockoutResponses,dummyOne,dummyTwo,dummyThree,dummyFour,dummyFive from medicalquestions where productId=".$bseprdtId;
 			foreach($query->result() as $row)
 			{
+				$list= array();
 				foreach($row as $column_name=>$column_value)
 				{
-					$arry[$column_name] = $column_value;
+					$list[$column_name] = $column_value;
 				}
+				$arry[] = $list;
 			}	
 			if($arry)$this->mc->memcached->save($key,$arry,0,0);
 		}
@@ -190,10 +196,12 @@ Class Cattle extends CI_Model
 			$query =  $this->db->query("select medicalquestions_Id,productId,qnSetCode,qnCode,qnDescription,qnType,defaultValue,isKnockoutQn,acceptedResponses,knockoutResponses,dummyOne,dummyTwo,dummyThree,dummyFour,dummyFive from animalquestions where productId=".$bseprdtId);
 			foreach($query->result() as $row)
 			{
+				$list= array();
 				foreach($row as $column_name=>$column_value)
 				{
-					$arry[$column_name] = $column_value;
+					$list[$column_name] = $column_value;
 				}
+				$arry[] = $list;
 			}	
 			if($arry)$this->mc->memcached->save($key,$arry,0,0);
 		}
