@@ -320,7 +320,7 @@ class Cattles extends CI_Controller {
 		if(!empty($data['baseproductId']))
 		{	
 			$arry['message'] = "Something went wrong.";	
-			$result = $this->cattle->getMedicalqns($data['baseproductId']);	
+			$result = $this->cattle->getAnimalqns($data['baseproductId']);	
 			if($result)
 			{
 				$arry['status'] = "success";

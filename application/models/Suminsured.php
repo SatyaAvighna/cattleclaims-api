@@ -32,6 +32,7 @@ Class suminsured extends CI_Model
 		if($this->db->affected_rows()>0)
 		{
 			$this->mc->memcached->delete($this->config->config['cKey']."_suminsureds");
+			$this->mc->memcached->delete($this->config->config['cKey']."_suminsureds_");
 			$this->mc->memcached->delete($this->config->config['cKey']."_suminsured_detail".$req['siId']);
 			$status = true;
 		}
@@ -53,6 +54,7 @@ Class suminsured extends CI_Model
 			if($this->db->affected_rows()>0)
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_suminsureds");
+				$this->mc->memcached->delete($this->config->config['cKey']."_suminsureds_");
 				$this->mc->memcached->delete($this->config->config['cKey']."_suminsured_detail".$req['siId']);
 				$status = true;
 			}
@@ -68,13 +70,14 @@ Class suminsured extends CI_Model
 		{
 			//echo "i";
 			$this->mc->memcached->delete($this->config->config['cKey']."_suminsureds");
+			$this->mc->memcached->delete($this->config->config['cKey']."_suminsureds_");
 			$status = true;
 		}
 		return $status;
 	}
 	public function getsuminsureds() 
 	{
-		$key = $this->config->config['cKey']."_suminsureds";
+		$key = $this->config->config['cKey']."_suminsureds_";
 		$arry = $this->mc->memcached->get($key);
 		if(!$arry)
 		{
