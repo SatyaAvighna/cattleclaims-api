@@ -30,7 +30,7 @@ class Breeds extends CI_Controller {
 		$arry = array();
 		$breedlist = $this->breedlist->getbreedlists();
 		$arry['status'] = "success";
-		$arry['message'] = "Entry retrieved successfully.";	
+		$arry['message'] = "Breed retrieved successfully.";	
 		$arry['list'] = $breedlist;
 		echo json_encode($arry);
 	}
@@ -46,7 +46,7 @@ class Breeds extends CI_Controller {
 		if($result)
 		{
 			$arry['status'] = "success";
-			$arry['message'] = "Entry created successfully.";	
+			$arry['message'] = "Breed created successfully.";	
 		}
 		echo json_encode($arry);
 	}
@@ -62,7 +62,7 @@ class Breeds extends CI_Controller {
 			$data['sId'] =  $this->encryption->decrypt($data['sId']);
 			$lists = $this->breedlist->getbreedlistById($data);	
 			$arry['status'] = "success";
-			$arry['message'] = "Entryretrieved successfully.";	
+			$arry['message'] = "Breed retrieved successfully.";	
 		}
 		$arry["detail"] = $lists;
 		echo json_encode($arry);
@@ -75,14 +75,14 @@ class Breeds extends CI_Controller {
 		$arry['message'] = "Id is mandatory.";
 		if(!empty($data['breedlist_Id']))
 		{
-			$arry['message'] = "Something went wrong.";	
+			$arry['message'] = "No change in the params.";
 			$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
 			$data['sId'] =  $this->encryption->decrypt($data['sId']);
 			$result = $this->breedlist->updatebreedlistById($data);	
 			if($result)
 			{
 				$arry['status'] = "success";
-				$arry['message'] = "Entry updated successfully.";	
+				$arry['message'] = "Breed updated successfully.";	
 			}
 		}
 		echo json_encode($arry);
@@ -95,14 +95,14 @@ class Breeds extends CI_Controller {
 		$arry['message'] = "Id is mandatory.";
 		if(!empty($data['breedlist_Id']))
 		{
-			$arry['message'] = "Something went wrong.";	
+			$arry['message'] = "Breed deleted failed.";	
 			$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
 			$data['sId'] =  $this->encryption->decrypt($data['sId']);
 			$result = $this->breedlist->deletebreedlistById($data);	
 			if($result)
 			{
 				$arry['status'] = "success";
-				$arry['message'] = "Entry deleted successfully.";	
+				$arry['message'] = "Breed deleted successfully.";	
 			}
 		}
 		echo json_encode($arry);
@@ -112,7 +112,7 @@ class Breeds extends CI_Controller {
 		$arry = array();
 		$breedlist = $this->breedlist->getbreedlists();
 		$arry['status'] = "success";
-		$arry['message'] = "Entry retrieved successfully.";	
+		$arry['message'] = "Breed retrieved successfully.";	
 		$arry['list'] = $breedlist;
 		echo json_encode($arry);
 	}
@@ -122,7 +122,7 @@ class Breeds extends CI_Controller {
 		$data =$this->input->post();
 		$breedlist = $this->breedlist->getbreedlistsByanimalType($data['animalType']);
 		$arry['status'] = "success";
-		$arry['message'] = "Entry retrieved successfully.";	
+		$arry['message'] = "Breed retrieved successfully.";	
 		$arry['list'] = $breedlist;
 		echo json_encode($arry);
 	}

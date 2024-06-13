@@ -64,7 +64,7 @@ class Cattles extends CI_Controller {
 								$arry['message'] = "Owner ID is mandatory.";
 								if($data['ownerId']!="")
 								{
-									$arry['message'] = "Something went wrong.";
+									$arry['message'] = "Cattle exists with Ear Tag.";
 									$result = $this->cattle->insertCattleById($data);	
 									if($result['cId']>0)
 									{
@@ -126,7 +126,7 @@ class Cattles extends CI_Controller {
 								$arry['message'] = "Sum Insured is mandatory.";
 								if($data['sumInsured']!="")
 								{
-									$arry['message'] = "Something went wrong.";
+									$arry['message'] = "No change in the params.";
 									$result = $this->cattle->updateCattleById($data);	
 									if($result)
 									{
@@ -264,7 +264,7 @@ class Cattles extends CI_Controller {
 		// $data['sId'] =  $this->encryption->decrypt($data['uId']);
 		if(!empty($data['cId']))
 		{	
-			$arry['message'] = "Something went wrong.";	
+			$arry['message'] = "Cattle delete failed.";	
 			$result = $this->cattle->deleteCattleById($data);	
 			if($result)
 			{
@@ -330,7 +330,7 @@ class Cattles extends CI_Controller {
 		$arry['quotes'] = [];
 		if(!empty($inputs['proposalId']))
 		{	
-			$arry['message'] = "Something went wrong.";	
+			$arry['message'] = "Invalid Proposal Id.";	
 			$data = $this->cattle->getCattleDetailsBypId($inputs['proposalId']);
 			// print_r($data);
 			$result = $this->cattle->getQuotes($data);	
@@ -352,7 +352,7 @@ class Cattles extends CI_Controller {
 		$arry['medicalqns'] = [];
 		if(!empty($data['baseproductId']))
 		{	
-			$arry['message'] = "Something went wrong.";	
+			$arry['message'] = "Invalid Product Id.";	
 			$result = $this->cattle->getMedicalqns($data['baseproductId']);	
 			if($result)
 			{
@@ -368,7 +368,7 @@ class Cattles extends CI_Controller {
 		$arry = array();
 		$data =$this->input->post();
 		// sumInsured,animalType,breed,gender,age
-		$arry['message'] = "Something went wrong.";	
+		// $arry['message'] = "Something went wrong.";	
 		$arry['list'] = array();
 		$result = $this->cattle->getSuminsureds();	
 		if($result)
@@ -388,7 +388,7 @@ class Cattles extends CI_Controller {
 		$arry['medicalqns'] = [];
 		if(!empty($data['baseproductId']))
 		{	
-			$arry['message'] = "Something went wrong.";	
+			$arry['message'] = "Invalid Product Id.";	
 			$result = $this->cattle->getAnimalqns($data['baseproductId']);	
 			if($result)
 			{

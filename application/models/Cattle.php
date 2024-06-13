@@ -84,16 +84,16 @@ Class Cattle extends CI_Model
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_cattles");
 				$cId =$this->db->insert_id();
+				$plId = $this->insertProposer($cId);
 			}
 		}
-		else
-		{
-			foreach($favexits->result() as $row)
-			{
-				$cId = $row->cId;
-			}	
-		}
-		$plId = $this->insertProposer($cId);
+		// else
+		// {
+		// 	foreach($favexits->result() as $row)
+		// 	{
+		// 		$cId = $row->cId;
+		// 	}	
+		// }
 		return array("proposalId"=>$plId,"cId"=>$cId);
 	}
 	public function insertProposer($cId) 
