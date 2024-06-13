@@ -143,43 +143,112 @@ class Cattles extends CI_Controller {
 		echo json_encode($arry);
 	}
 	
-	public function updatePaths()
+	public function updateearTagPath()
 	{
 		$arry = array();
 		$arry['status'] = "error";
 		$arry['message'] = "Cattle Id is mandatory.";
-		// $arry['earTag'] = "";
-		// $arry['lSidePath'] = "";
-		// $arry['rSidePath'] = "";
-		// $arry['vPath'] = "";
 		$data =$this->input->post();
 		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
-		// $data['sId'] =  $this->encryption->decrypt($data['uId']);
-		// print_r($data);
-		// print_r($_FILES);
 		if(!empty($data['cId']))
 		{
             // cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath
             $data['earTag'] = "";
-            $data['lSidePath'] = "";
-            $data['rSidePath'] = "";
-            $data['vPath'] = "";
+			$arry['message'] = "No change in the params.";
+			// print_r($_FILES);
             if(!empty($_FILES)) 
             {
                 if(isset($_FILES['earTag'])) $data['earTag'] = $this->uploadfiles($_FILES,"earTag",$data['cId']);
-                if(isset($_FILES['lSidePath'])) $data['lSidePath'] = $this->uploadfiles($_FILES,"lSidePath",$data['cId']);
-                if(isset($_FILES['rSidePath'])) $data['rSidePath'] = $this->uploadfiles($_FILES,"rSidePath",$data['cId']);
-                if(isset($_FILES['vPath'])) $data['vPath'] = $this->uploadfiles($_FILES,"vPath",$data['cId']);
             }
-            $arry['message'] = "Something went wrong.";
+			if(empty($data['earTag']))  $arry['message'] = "Ear tag file is mandatory.";
             $result = $this->cattle->updateCattleById($data);	
             if($result)
             {
                 $arry['status'] = "success";
                 $arry['message'] = "Cattle updated successfully.";	
 				if(isset($_FILES['earTag'])) $arry['earTag'] = $data['earTag'];
+            }
+		}
+		echo json_encode($arry);
+	}
+	public function updatelSidePath()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$arry['message'] = "Cattle Id is mandatory.";
+		$data =$this->input->post();
+		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
+		if(!empty($data['cId']))
+		{
+            // cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath
+            $data['lSidePath'] = "";
+			$arry['message'] = "No change in the params.";
+            if(!empty($_FILES)) 
+            {
+                if(isset($_FILES['lSidePath'])) $data['lSidePath'] = $this->uploadfiles($_FILES,"lSidePath",$data['cId']);
+            }
+			if(empty($data['lSidePath']))  $arry['message'] = "Cattle left side file is mandatory.";
+            $result = $this->cattle->updateCattleById($data);	
+            if($result)
+            {
+                $arry['status'] = "success";
+                $arry['message'] = "Cattle updated successfully.";	
 				if(isset($_FILES['lSidePath'])) $arry['lSidePath'] = $data['lSidePath'];
+            }
+		}
+		echo json_encode($arry);
+	}
+	public function updaterSidePath()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$arry['message'] = "Cattle Id is mandatory.";
+		$data =$this->input->post();
+		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
+		if(!empty($data['cId']))
+		{
+            // cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath
+            $data['rSidePath'] = "";
+			$arry['message'] = "No change in the params.";
+			// print_r($_FILES);
+            if(!empty($_FILES)) 
+            {
+                if(isset($_FILES['rSidePath'])) $data['rSidePath'] = $this->uploadfiles($_FILES,"rSidePath",$data['cId']);
+            }
+			if(empty($data['rSidePath']))  $arry['message'] = "Cattle right side file is mandatory.";
+            $result = $this->cattle->updateCattleById($data);	
+            if($result)
+            {
+                $arry['status'] = "success";
+                $arry['message'] = "Cattle updated successfully.";	
 				if(isset($_FILES['rSidePath'])) $arry['rSidePath'] = $data['rSidePath'];
+            }
+		}
+		echo json_encode($arry);
+	}
+	public function updatevideoPath()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$arry['message'] = "Cattle Id is mandatory.";
+		$data =$this->input->post();
+		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
+		if(!empty($data['cId']))
+		{
+            // cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath
+            $data['vPath'] = "";
+			$arry['message'] = "No change in the params.";
+			// print_r($_FILES);
+            if(!empty($_FILES)) 
+            {
+                if(isset($_FILES['vPath'])) $data['vPath'] = $this->uploadfiles($_FILES,"vPath",$data['cId']);
+            }
+			if(empty($data['vPath']))  $arry['message'] = "Video file is mandatory.";
+            $result = $this->cattle->updateCattleById($data);	
+            if($result)
+            {
+                $arry['status'] = "success";
+                $arry['message'] = "Cattle updated successfully.";	
 				if(isset($_FILES['vPath'])) $arry['vPath'] = $data['vPath'];
             }
 		}

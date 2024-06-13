@@ -13,7 +13,7 @@ Class Cattle extends CI_Model
 		if(!$arry)
 		{
 			$arry= array();
-			$query =  $this->db->query("select cId,animalType,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath from cattles where cId=".$cId);
+			$query =  $this->db->query("select cId,animalType,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath,cAddress,cPincode,cDistrict,cState from cattles where cId=".$cId);
 			foreach($query->result() as $row)
 			{
 				foreach($row as $column_name=>$column_value)
@@ -78,8 +78,8 @@ Class Cattle extends CI_Model
 		$favexits = $this->db->query("select cId from cattles where tagnumber=".$this->db->escape($req['tagnumber']));
 		if($favexits->num_rows() <= 0)
 		{
-			// $query =  $this->db->query("INSERT INTO cattles(animalType,tagnumber,breed,gender,age,sumInsured,ownerId,cAddress, cPincode, cDistrict, cState,createdBy) VALUES (".$this->db->escape($req['animalType']).",".$this->db->escape($req['tagnumber']).",".$this->db->escape($req['breed']).",".$this->db->escape($req['gender']).",".$this->db->escape($req['age']).",".$this->db->escape($req['sumInsured']).",".$this->db->escape($req['ownerId']).",".$this->db->escape($req['cAddress']).",".$this->db->escape($req['cPincode']).",".$this->db->escape($req['cDistrict']).",".$this->db->escape($req['cState']).",".$req['sId'].")");
-			$query =  $this->db->query("INSERT INTO cattles(animalType,tagnumber,breed,gender,age,sumInsured,ownerId,createdBy) VALUES (".$this->db->escape($req['animalType']).",".$this->db->escape($req['tagnumber']).",".$this->db->escape($req['breed']).",".$this->db->escape($req['gender']).",".$this->db->escape($req['age']).",".$this->db->escape($req['sumInsured']).",".$this->db->escape($req['ownerId']).",".$req['sId'].")");
+			$query =  $this->db->query("INSERT INTO cattles(animalType,tagnumber,breed,gender,age,sumInsured,ownerId,cAddress, cPincode, cDistrict, cState,createdBy) VALUES (".$this->db->escape($req['animalType']).",".$this->db->escape($req['tagnumber']).",".$this->db->escape($req['breed']).",".$this->db->escape($req['gender']).",".$this->db->escape($req['age']).",".$this->db->escape($req['sumInsured']).",".$this->db->escape($req['ownerId']).",".$this->db->escape($req['cAddress']).",".$this->db->escape($req['cPincode']).",".$this->db->escape($req['cDistrict']).",".$this->db->escape($req['cState']).",".$req['sId'].")");
+			// $query =  $this->db->query("INSERT INTO cattles(animalType,tagnumber,breed,gender,age,sumInsured,ownerId,createdBy) VALUES (".$this->db->escape($req['animalType']).",".$this->db->escape($req['tagnumber']).",".$this->db->escape($req['breed']).",".$this->db->escape($req['gender']).",".$this->db->escape($req['age']).",".$this->db->escape($req['sumInsured']).",".$this->db->escape($req['ownerId']).",".$req['sId'].")");
 			if($this->db->affected_rows()>0)
 			{
 				$this->mc->memcached->delete($this->config->config['cKey']."_cattles");
