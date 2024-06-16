@@ -53,6 +53,7 @@ Class Cattle extends CI_Model
 		if(!empty($req['lSidePath'])) $set .= "lSidePath=".$this->db->escape($req['lSidePath']).",";
 		if(!empty($req['rSidePath'])) $set .= "rSidePath=".$this->db->escape($req['rSidePath']).",";
 		if(!empty($req['vPath'])) $set .= "vPath=".$this->db->escape($req['vPath']).",";
+		if(!empty($req['vdcPath'])) $set .= "vdcPath=".$this->db->escape($req['vdcPath']).",";
 		if(!empty($req['cAddress'])) $set .= "cAddress=".$this->db->escape($req['cAddress']).",";
 		if(!empty($req['cPincode'])) $set .= "cPincode=".$this->db->escape($req['cPincode']).",";
 		if(!empty($req['cDistrict'])) $set .= "cDistrict=".$this->db->escape($req['cDistrict']).",";

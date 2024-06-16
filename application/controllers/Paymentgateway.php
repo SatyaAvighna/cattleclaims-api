@@ -127,7 +127,7 @@ class Paymentgateway extends CI_Controller {
 						$data['coCurrency']="";
 						$data['coreturnUrl']="";
 						$arry['message'] = "Order Id already exists.";
-						$data['orderId'] = "CAP".time();
+						$data['orderId'] = "CAP_".time();
 						$result = $this->gateway->insertpgorderById($data);	
 						if($result)
 						{

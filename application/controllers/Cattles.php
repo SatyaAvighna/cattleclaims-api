@@ -254,6 +254,34 @@ class Cattles extends CI_Controller {
 		}
 		echo json_encode($arry);
 	}
+	public function updateVdCertificate()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$arry['message'] = "Cattle Id is mandatory.";
+		$data =$this->input->post();
+		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
+		if(!empty($data['cId']))
+		{
+            // cattle,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath,vdcPath
+            $data['vdcPath'] = "";
+			$arry['message'] = "No change in the params.";
+			// print_r($_FILES);
+            if(!empty($_FILES)) 
+            {
+                if(isset($_FILES['vdcPath'])) $data['vdcPath'] = $this->uploadfiles($_FILES,"vdcPath",$data['cId']);
+            }
+			if(empty($data['vdcPath']))  $arry['message'] = "Video file is mandatory.";
+            $result = $this->cattle->updateCattleById($data);	
+            if($result)
+            {
+                $arry['status'] = "success";
+                $arry['message'] = "Cattle updated successfully.";	
+				if(isset($_FILES['vdcPath'])) $arry['vdcPath'] = $data['vdcPath'];
+            }
+		}
+		echo json_encode($arry);
+	}
 	public function delete()
 	{
 		$arry = array();
@@ -312,7 +340,7 @@ class Cattles extends CI_Controller {
             if(!file_exists($lPath)) mkdir($lPath, 0777);
 			$lPath = "uploads/cattles/".$cId;
             if(!file_exists($lPath)) mkdir($lPath, 0777);
-            $lPath .= "/".time()."_".$files[$fname]['name'];
+            $lPath .= "/".$fname."_".time()."_".$files[$fname]['name'];
             $targetPath = './'.$lPath;
             if(move_uploaded_file($sourcePath,$targetPath))
             {
@@ -337,7 +365,7 @@ class Cattles extends CI_Controller {
 			if($result)
 			{
 				$arry['status'] = "success";
-				$arry['message'] = "Quotes Retirved successfully.";	
+				$arry['message'] = "Quotes Retrieved successfully.";	
 				$arry['quotes'] = $result;
 			}
 		}
@@ -357,7 +385,7 @@ class Cattles extends CI_Controller {
 			if($result)
 			{
 				$arry['status'] = "success";
-				$arry['message'] = "Medicalqns Retirved successfully.";	
+				$arry['message'] = "Medicalqns Retrieved successfully.";	
 				$arry['medicalqns'] = $result;
 			}
 		}
@@ -374,7 +402,7 @@ class Cattles extends CI_Controller {
 		if($result)
 		{
 			$arry['status'] = "success";
-			$arry['message'] = "Suminsured Retirved successfully.";	
+			$arry['message'] = "Suminsured Retrieved successfully.";	
 			$arry['list'] = $result;
 		}
 		echo json_encode($arry);
@@ -393,7 +421,7 @@ class Cattles extends CI_Controller {
 			if($result)
 			{
 				$arry['status'] = "success";
-				$arry['message'] = "Medicalqns Retirved successfully.";	
+				$arry['message'] = "Medicalqns Retrieved successfully.";	
 				$arry['medicalqns'] = $result;
 			}
 		}

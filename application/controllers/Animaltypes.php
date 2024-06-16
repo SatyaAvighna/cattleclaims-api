@@ -30,7 +30,7 @@ class Animaltypes extends CI_Controller {
 		$arry = array();
 		$animaltype = $this->animaltype->getanimaltypes();
 		$arry['status'] = "success";
-		$arry['message'] = "Entry retrieved successfully.";	
+		$arry['message'] = "Animaltype animaltypesuccessfully.";	
 		$arry['list'] = $animaltype;
 		echo json_encode($arry);
 	}
@@ -46,7 +46,7 @@ class Animaltypes extends CI_Controller {
 		if($result)
 		{
 			$arry['status'] = "success";
-			$arry['message'] = "Entry created successfully.";	
+			$arry['message'] = "Animaltype created successfully.";	
 		}
 		echo json_encode($arry);
 	}
@@ -62,7 +62,7 @@ class Animaltypes extends CI_Controller {
 			$data['sId'] =  $this->encryption->decrypt($data['sId']);
 			$lists = $this->animaltype->getanimaltypeById($data);	
 			$arry['status'] = "success";
-			$arry['message'] = "Entryretrieved successfully.";	
+			$arry['message'] = "Animaltype retrieved successfully.";	
 		}
 		$arry["detail"] = $lists;
 		echo json_encode($arry);
@@ -82,7 +82,7 @@ class Animaltypes extends CI_Controller {
 			if($result)
 			{
 				$arry['status'] = "success";
-				$arry['message'] = "Entry updated successfully.";	
+				$arry['message'] = "Animaltype updated successfully.";	
 			}
 		}
 		echo json_encode($arry);
@@ -102,7 +102,7 @@ class Animaltypes extends CI_Controller {
 			if($result)
 			{
 				$arry['status'] = "success";
-				$arry['message'] = "Entry deleted successfully.";	
+				$arry['message'] = "Animaltype deleted successfully.";	
 			}
 		}
 		echo json_encode($arry);
@@ -112,7 +112,7 @@ class Animaltypes extends CI_Controller {
 		$arry = array();
 		$animaltype = $this->animaltype->getanimalRtypes();
 		$arry['status'] = "success";
-		$arry['message'] = "Entry retrieved successfully.";	
+		$arry['message'] = "Animaltype retrieved successfully.";	
 		$arry['list'] = $animaltype;
 		echo json_encode($arry);
 	}
