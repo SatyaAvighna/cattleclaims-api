@@ -84,6 +84,25 @@ class Cattles extends CI_Controller {
 		$arry['proposalId'] = $proposalId;
 		echo json_encode($arry);
 	}
+	public function verifyEartag()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$arry['message'] = "EarTag is mandatory.";
+		$data =$this->input->post();
+		$this->encryption->initialize(array('driver' => 'openssl','cipher' => 'aes-256','mode' => 'ctr'));
+		if(!empty($data['tagnumber']))
+		{
+			$arry['message'] = "Cattle exists with Ear Tag.";
+			$result = $this->cattle->getCattleByEarTag($data);	
+			if($result)
+			{
+				$arry['status'] = "success";
+				$arry['message'] = "Cattle not exists with Ear Tag.";	
+			}
+		}
+		echo json_encode($arry);
+	}
 	public function retrive()
 	{
 		$arry = array();

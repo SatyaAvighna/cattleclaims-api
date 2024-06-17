@@ -126,7 +126,7 @@ class Bannerimages extends CI_Controller {
                 // pass;
             }
         }
-		return $lPath;
+		return base_url().$lPath;
 	}
 	public function delete()
 	{

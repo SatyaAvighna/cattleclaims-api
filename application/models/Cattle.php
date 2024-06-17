@@ -88,14 +88,17 @@ Class Cattle extends CI_Model
 				$plId = $this->insertProposer($cId);
 			}
 		}
-		// else
-		// {
-		// 	foreach($favexits->result() as $row)
-		// 	{
-		// 		$cId = $row->cId;
-		// 	}	
-		// }
 		return array("proposalId"=>$plId,"cId"=>$cId);
+	}
+	public function getCattleByEarTag($req) 
+	{
+		$status = false;
+		$favexits = $this->db->query("select cId from cattles where tagnumber=".$this->db->escape($req['tagnumber']));
+		if($favexits->num_rows() <= 0)
+		{
+			$status = true;
+		}
+		return $status;
 	}
 	public function insertProposer($cId) 
 	{
