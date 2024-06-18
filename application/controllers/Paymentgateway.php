@@ -131,7 +131,7 @@ class Paymentgateway extends CI_Controller {
 						$result = $this->gateway->insertpgorderById($data);	
 						if($result)
 						{
-							// $arry['status'] = "success";
+							$arry['status'] = "success";
 							$arry['message'] = "Order created successfully.";
 							$pgoId = $result;	
 							// $data1 = array();
@@ -197,7 +197,7 @@ class Paymentgateway extends CI_Controller {
 		 $response = array("message" => $e->getErrorMessage());
 		 error_log($e->getErrorMessage());
 		 echo json_encode($response);
-		 throw new Exception ($e->getErrorMessage());
+		 return new Exception ($e->getErrorMessage());
 		}
 	 }
 	 
@@ -220,7 +220,7 @@ class Paymentgateway extends CI_Controller {
 			 default:
 				 $response += ["message"=> "order status " . $order->status];
 		 }
-		 $response += ["order_status"=> $order->status];
+		 $response += ["pgStatus"=> $order->status];
 		 return $response;
 	}
 	public function encryptValue($data)
@@ -237,17 +237,27 @@ class Paymentgateway extends CI_Controller {
 	}
 	public function paymentstatus()
 	{
+		$arry = array();
+		$arry['status'] = "error";
+		$arry['message'] = "Order Id is mandatory.";
 		$data =$this->input->post();	
 		$config = $this->initPay();
 		if (isset($data["order_id"])) {
 			try {
 				$orderId = $data["order_id"];
 				$order = $this->getOrder($orderId, $config);
+				$arry['status'] = "success";
 				$response = $this->orderStatusMessage($order);
+				$result = $this->gateway->updatepgStatusByorderId($response);	
+				if($result)
+				{
+					$arry['status'] = "success";
+					$arry['message'] = $response['message'];	
+				}
 			}
 			catch (JuspayException $e ) {
 				http_response_code(500);
-				$response = array("message" => $e->getErrorMessage());
+				$arry['message'] = $e->getErrorMessage();
 				error_log($e->getMessage());
 			}
 		} 
@@ -258,10 +268,12 @@ class Paymentgateway extends CI_Controller {
 		// } 
 		else {
 			http_response_code(400);
-			$response = array('message' => 'order id not found');
+			$arry['message'] = 'order id not found';
+			// $response = array('message' => 'order id not found');
 		}
+		// $pg_result = array_merge($arry,$response);
 		// header('Content-Type: application/json');
-		echo json_encode($response);	
+		echo json_encode($arry);	
 		// echo json_encode($response);
 	}
 	

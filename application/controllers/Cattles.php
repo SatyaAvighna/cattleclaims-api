@@ -502,4 +502,44 @@ class Cattles extends CI_Controller {
 		}
 		echo json_encode($arry);
 	}
+	public function getPolicyPdf()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$data = $this->input->post();
+		$arry['message'] = "Cattle Id is mandatory.";
+		$arry['pdfPath'] = "";
+		// $data['proposalId'] = base64_decode($data['proposalId']);
+		if(!empty($data['cId']))
+		{	
+			$pdfPath = $this->getPolicyPdfPath($data['cId']);
+			$data['pdfPath'] = $pdfPath;
+			$result = $this->cattle->updateCattleById($data);
+			if($result)
+			{
+				$arry['status'] = "success";
+				$arry['message'] = "Pdf retrieved successfully.";
+				$arry['pdfPath'] = $pdfPath;
+			}
+		}
+		echo json_encode($arry);
+	}
+	public function getPolicyPdfPath($proposalId)
+	{
+		$sourcePath = 'uploads/sample-cattle.pdf';
+		// $sourcePath = $files[$fname]['tmp_name'];
+		$lPath = "";
+		// $path_parts = pathinfo($sourcePat);
+		$lPath = "uploads/pdfPaths";
+		if(!file_exists($lPath)) mkdir($lPath, 0777);
+		$lPath = "uploads/pdfPaths/".$proposalId;
+		if(!file_exists($lPath)) mkdir($lPath, 0777);
+		$lPath .= "/".time().".pdf";
+		$targetPath = './'.$lPath;
+		if(move_uploaded_file($sourcePath,$targetPath))
+		{
+			// pass;
+		}
+		return base_url().$lPath; 
+	}
 }

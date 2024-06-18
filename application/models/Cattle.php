@@ -58,6 +58,7 @@ Class Cattle extends CI_Model
 		if(!empty($req['cPincode'])) $set .= "cPincode=".$this->db->escape($req['cPincode']).",";
 		if(!empty($req['cDistrict'])) $set .= "cDistrict=".$this->db->escape($req['cDistrict']).",";
 		if(!empty($req['cState'])) $set .= "cState=".$this->db->escape($req['cState']).",";
+		if(!empty($req['pdfPath'])) $set .= "pdfPath=".$this->db->escape($req['pdfPath']).",";
 		// if(!empty($req['updatedBy'])) $set .= "updatedBy=".$this->db->escape($req['sId']).",";s
 		if(!empty($set))
 		{
