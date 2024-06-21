@@ -524,6 +524,27 @@ class Cattles extends CI_Controller {
 		}
 		echo json_encode($arry);
 	}
+	public function getPolicyPdf1()
+	{
+		$arry = array();
+		$arry['status'] = "error";
+		$data = $this->input->get();
+		$arry['message'] = "Cattle Id is mandatory.";
+		$arry['pdfPath'] = "";
+		if(!empty($data['cId']))
+		{	
+			$pdfPath = $this->getPolicyPdfPath1($data['cId']);
+			$data['pdfPath'] = $pdfPath;
+			$result = $this->cattle->updateCattleById($data);
+			if($result)
+			{
+				$arry['status'] = "success";
+				$arry['message'] = "Pdf retrieved successfully.";
+				$arry['pdfPath'] = $pdfPath;
+			}
+		}
+		echo json_encode($arry);
+	}
 	public function getPolicyPdfPath($proposalId)
 	{
 		$sourcePath = 'uploads/sample-cattle.pdf';
@@ -536,10 +557,30 @@ class Cattles extends CI_Controller {
 		if(!file_exists($lPath)) mkdir($lPath, 0777);
 		$lPath .= "/".time().".pdf";
 		$targetPath = './'.$lPath;
-		if(move_uploaded_file($sourcePath,$targetPath))
+		if(copy($sourcePath,$targetPath))
 		{
 			// pass;
 		}
 		return base_url().$lPath; 
+	}
+	
+	public function getPolicyPdfPath1($proposalId)
+	{
+		$data = array();
+		$data['cattle'] = $this->cattle->getCattleById($proposalId);
+		$reports1 = $this->load->view('pdf-generation',$data,true);
+		$mpdf = new \Mpdf\Mpdf(array('setAutoTopMargin' => 'pad','pad' => "20"));
+		$mpdf->AddPage("P",'','','','',18,18,15,15,15,15);
+		$stylesheet = file_get_contents('vendors/bootstrap/dist/css/bootstrap.min.css');
+		$mpdf->WriteHTML($stylesheet, \Mpdf\HTMLParserMode::HEADER_CSS);
+		$mpdf->WriteHTML($reports1,\Mpdf\HTMLParserMode::HTML_BODY);
+		$lPath = "uploads/pdfPaths/";
+		if(!file_exists($lPath)) mkdir($lPath, 0777);
+		$lPath = "uploads/pdfPaths/".$proposalId;
+		if(!file_exists($lPath)) mkdir($lPath, 0777);
+		$lPath .= "/pdf_".time()."_".$proposalId."_".time().".pdf";
+		$targetPath = './'.$lPath;
+		$mpdf->Output($targetPath, 'F');
+		return $lPath;
 	}
 }
