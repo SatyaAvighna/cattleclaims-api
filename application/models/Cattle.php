@@ -13,13 +13,15 @@ Class Cattle extends CI_Model
 		if(!$arry)
 		{
 			$arry= array();
-			$query =  $this->db->query("select cId,animalType,tagnumber,breed,gender,age,sumInsured,earTag,lSidePath,rSidePath,vPath,cAddress,cPincode,cDistrict,cState from cattles where cId=".$cId);
+			$query =  $this->db->query("select c.cId,c.animalType,c.tagnumber,c.breed,c.gender,c.age,c.sumInsured,c.earTag,c.lSidePath,c.rSidePath,c.vPath,c.cAddress,c.cPincode,c.cDistrict,c.cState,chp.proposalId from cattles c, cattle_has_proposal chp where chp.cId=c.cId and c.cId=".$cId);
 			foreach($query->result() as $row)
 			{
 				foreach($row as $column_name=>$column_value)
 				{
 					$arry[$column_name] = $column_value;
 				}
+				$arry["medicalqns"] = $this->getMedicalQnsBypId($arry["proposalId"]);
+				$arry["vdqns"] = $this->getVdMedicalQnsBypId($arry["proposalId"]);
 			}	
 			if($arry)$this->mc->memcached->save($key,$arry,0,0);
 		}
@@ -266,7 +268,7 @@ Class Cattle extends CI_Model
 		if(!$arry)
 		{
 			$arry= array();
-			$query = $this->db->query("select * from cattle_has_medicalquestions lhm where lhm.proposalId=".$proposalId);
+			$query = $this->db->query("select lhm.*,mq.* from cattle_has_medicalquestions lhm,medicalquestions mq where lhm.mqId=mq.medicalquestions_Id and lhm.proposalId=".$proposalId);
 			foreach($query->result() as $row)
 			{
 				$list= array();
@@ -331,7 +333,8 @@ Class Cattle extends CI_Model
 		if(!$arry)
 		{
 			$arry= array();
-			$query = $this->db->query("select * from cattle_has_vdquestions lhm where lhm.proposalId=".$proposalId);
+			// $query =  $this->db->query("select animalquestions_Id,productId,qnSetCode,qnCode,qnDescription,qnType,defaultValue,isKnockoutQn,acceptedResponses,knockoutResponses,dummyOne,dummyTwo,dummyThree,dummyFour,dummyFive from animalquestions where productId=".$bseprdtId);
+			$query = $this->db->query("select lhm.*,aq.* from cattle_has_vdquestions lhm,animalquestions aq where lhm.aqId = aq.animalquestions_Id and lhm.proposalId=".$proposalId);
 			foreach($query->result() as $row)
 			{
 				$list= array();
