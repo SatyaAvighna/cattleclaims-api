@@ -13,7 +13,7 @@ Class Cattle extends CI_Model
 		if(!$arry)
 		{
 			$arry= array();
-			$query =  $this->db->query("select c.cId,c.animalType,c.tagnumber,c.breed,c.gender,c.age,c.sumInsured,c.earTag,c.lSidePath,c.rSidePath,c.vPath,c.cAddress,c.cPincode,c.cDistrict,c.cState,chp.proposalId from cattles c, cattle_has_proposal chp where chp.cId=c.cId and c.cId=".$cId);
+			$query =  $this->db->query("select c.cId,c.animalType,c.tagnumber,c.breed,c.gender,c.age,c.sumInsured,c.earTag,c.lSidePath,c.rSidePath,c.vPath,c.cAddress,c.cPincode,c.cDistrict,c.cState,c.ownerId,chp.proposalId from cattles c, cattle_has_proposal chp where chp.cId=c.cId and c.cId=".$cId);
 			foreach($query->result() as $row)
 			{
 				foreach($row as $column_name=>$column_value)
@@ -21,7 +21,27 @@ Class Cattle extends CI_Model
 					$arry[$column_name] = $column_value;
 				}
 				$arry["medicalqns"] = $this->getMedicalQnsBypId($arry["proposalId"]);
+				$arry["owner"] = $this->getOwnerById($arry["ownerId"]);
 				$arry["vdqns"] = $this->getVdMedicalQnsBypId($arry["proposalId"]);
+			}	
+			if($arry)$this->mc->memcached->save($key,$arry,0,0);
+		}
+		return $arry;
+	}
+	public function getOwnerById($oId) 
+	{	
+		$key = $this->config->config['cKey']."_owner_detail".$oId;
+		$arry = $this->mc->memcached->get($key);
+		if(!$arry)
+		{
+			$arry= array();
+			$query =  $this->db->query("select oId,oName,oMobile,oAadhar,oAddress,oPincode,oDistrict,oState from owners where oId=".$oId);
+			foreach($query->result() as $row)
+			{
+				foreach($row as $column_name=>$column_value)
+				{
+					$arry[$column_name] = $column_value;
+				}
 			}	
 			if($arry)$this->mc->memcached->save($key,$arry,0,0);
 		}
